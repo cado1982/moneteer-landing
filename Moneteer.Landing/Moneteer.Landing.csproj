@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="3.7.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App"  />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" PrivateAssets="All" />
     <PackageReference Include="Moneteer.Identity.Domain" Version="1.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
