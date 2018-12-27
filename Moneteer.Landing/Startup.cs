@@ -56,10 +56,6 @@ namespace Moneteer.Landing.V2
             });
             services.Configure<IdentityOptions>(options =>
             {
-                //options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
-                //options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
-                //options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
-
                 options.Lockout.AllowedForNewUsers = false;
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
