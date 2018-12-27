@@ -1,0 +1,15 @@
+﻿@import "colors.scss";
+
+footer {
+    display: flex;
+    flex-direction: row;
+    background-color: $brand-light;
+    margin-top: 1em;
+}
+
+.footer-container {
+    flex: 0 0 50%;
+    justify-content: center;
+    text-align: center;
+    padding: 4em;
+}

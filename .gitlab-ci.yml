@@ -1,0 +1,10 @@
+image: microsoft/dotnet:latest
+
+stages:
+  - build
+
+build-landing:
+  stage: build
+  script:
+    - "cd Moneteer.Landing"
+    - "dotnet build"

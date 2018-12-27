@@ -1,0 +1,35 @@
+﻿@import "colors.scss";
+
+#features {
+    text-align: center;
+}
+
+#features > h2 {
+    color: $brand-dark;
+}
+
+#features > h2 > strong {
+    font-weight: 500;
+}
+
+.features_feature-column { 
+    display: flex;
+    flex-direction: column;
+}
+
+.features_feature {
+    margin: 1em;
+    padding: 1em;
+    background-color: $brand-light;
+    color: $font-dark;
+    border-radius: 5px;
+}
+
+.features_feature-header {
+    font-size: large;
+    font-weight: bold;
+}
+
+.features_feature-description {
+
+}

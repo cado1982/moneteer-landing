@@ -1,0 +1,97 @@
+{
+  "_args": [
+    [
+      "@clr/ui@0.12.6",
+      "D:\\Git\\moneteer.net.core\\Moneteer.Landing.V2"
+    ]
+  ],
+  "_from": "@clr/ui@0.12.6",
+  "_id": "@clr/ui@0.12.6",
+  "_inCache": true,
+  "_location": "/@clr/ui",
+  "_nodeVersion": "9.3.0",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/ui_0.12.6_1532629207788_0.5525853902198865"
+  },
+  "_npmUser": {
+    "email": "hippely@gmail.com",
+    "name": "hippeelee"
+  },
+  "_npmVersion": "6.2.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@clr/ui",
+    "raw": "@clr/ui@0.12.6",
+    "rawSpec": "0.12.6",
+    "scope": "@clr",
+    "spec": "0.12.6",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@clr/ui/-/ui-0.12.6.tgz",
+  "_shasum": "bb019268820e97e1c9334e4673ad45ebcd5e165c",
+  "_shrinkwrap": null,
+  "_spec": "@clr/ui@0.12.6",
+  "_where": "D:\\Git\\moneteer.net.core\\Moneteer.Landing.V2",
+  "author": {
+    "name": "clarity"
+  },
+  "bugs": {
+    "url": "https://github.com/vmware/clarity/issues"
+  },
+  "dependencies": {},
+  "description": "CSS for Clarity",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "fileCount": 125,
+    "integrity": "sha512-++HP3GZ4ooArswnZ+KcS6giw0SASYsYSgNFLlsbJ/KQGQSqSln57PQTGOi9St3Nl/fNMs2Crc1uE87785EKEMg==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJbWhDXCRA9TVsSAnZWagAAvpYP/3EiWThtHm0KZcOQBfNG\nhXQlJF9bNF81hPh4/2KQerIMxdG+j/caMmVX7dm/XjapukqoyyM8WwpV6wy0\nyW1HkTqTB/3NjnVZGvrE38RFFcpMH1OP7h8ov6ntYu/VgEECvHfxeN3suT1p\nFbpFViprYtNyH7lsXLDlPG3BCGB6YyJso+7wJ7bbDdMYMlRxqNzS6yYlACmP\nBSSYxoIT0ZGglVn3Wo25U6idadn3Qki4oIbSnWIkChbPUan2CwfH+gnd7BBD\nq1JGH9jkdUuAFvRgLiymPzGsBw2OYUUWMplH1Y29/638iDfecFqIQ1AWNmkw\nf2AebocfTl1OddVXoxMW0WZuTg5KsWfegyD+QGHxWUPbOQsvDnPI7MYbbzxV\narOPUeBKWr7x8XOAxRyq68bJgoC3C2B/zqtdQMv4t1I+Z+M7Q/RdLQpI0b/+\nG3BryQG3PbujoKxR2iUd1IgPSFF/zETh34bX8SbeZBC+RGfKkOB3nEMEQX5K\nf8uuG0C6VLgBaBDyP/naDcPxZeQb5QbrU6yFZc7IKaGJpHe9og929wADcS1q\n8idwj78sGNcGytY7r1NtY1JNfBU2lpnzdZJd/NYd0Wo1dJS32n2zRkZnNd0P\nxOYfHqApHNc2BC74k6aJ4b2Ta3N2QxQEt+h5aXHiFSm7Kyb0eN7TnX6wIbur\n2Cue\r\n=9hnc\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "bb019268820e97e1c9334e4673ad45ebcd5e165c",
+    "tarball": "https://registry.npmjs.org/@clr/ui/-/ui-0.12.6.tgz",
+    "unpackedSize": 3929520
+  },
+  "homepage": "https://vmware.github.io/clarity/",
+  "installable": true,
+  "license": "MIT",
+  "maintainers": [
+    {
+      "email": "gnomation@gnomeontherun.com",
+      "name": "gnomeontherun"
+    },
+    {
+      "email": "hippely@gmail.com",
+      "name": "hippeelee"
+    },
+    {
+      "email": "jeeyun.lim@gmail.com",
+      "name": "jeeyun"
+    },
+    {
+      "email": "smathis@vmware.com",
+      "name": "mathisscott"
+    },
+    {
+      "email": "shijir99@gmail.com",
+      "name": "shijir"
+    },
+    {
+      "email": "petonnet.eudes@gmail.com",
+      "name": "youdz"
+    }
+  ],
+  "name": "@clr/ui",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "@clr/icons": "0.12.6",
+    "bootstrap": "4.0.0-alpha.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vmware/clarity.git"
+  },
+  "version": "0.12.6"
+}

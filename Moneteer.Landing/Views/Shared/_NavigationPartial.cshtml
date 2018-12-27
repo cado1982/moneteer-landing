@@ -1,0 +1,26 @@
+﻿<header class="header" id="navigation">
+    <div class="branding">
+        <a href="/" class="nav-link">
+            <clr-icon shape="dollar-bill" class="is-success"></clr-icon>
+            <span class="title">Moneteer</span>
+        </a>
+    </div>
+    <div class="header-nav">
+        <a class="nav-link nav-text" asp-page="/Pricing">Features</a>
+        <a class="nav-link nav-text" asp-controller="Pricing" asp-action="Index">Pricing</a>
+        <a class="nav-link nav-text" href="#">About</a>
+        <a class="nav-link nav-text" href="https://localhost:4200">My Budgets</a>
+    </div>
+    <div class="header-actions">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a class="nav-link nav-text" asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
+            <a class="nav-link nav-text" asp-controller="Account" asp-action="Logout">Log out</a>
+        }
+        else
+        {
+            <a class="nav-link nav-text" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            <a class="nav-link nav-text" asp-controller="Account" asp-action="Login">Login</a>
+        }
+    </div>
+</header>
