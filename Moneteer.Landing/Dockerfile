@@ -1,19 +1,19 @@
-FROM microsoft/dotnet:2.1-sdk AS base
+FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
 WORKDIR /app
-EXPOSE 4500
+EXPOSE 80
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY Moneteer.Landing.V2/Moneteer.Landing.V2.csproj Moneteer.Landing.V2/
-RUN dotnet restore Moneteer.Landing.V2/Moneteer.Landing.V2.csproj
+COPY ["Moneteer.Landing.csproj", "Moneteer.Landing/"]
+RUN dotnet restore "Moneteer.Landing/Moneteer.Landing.csproj"
 COPY . .
-WORKDIR /src/Moneteer.Landing.V2
-RUN dotnet build Moneteer.Landing.V2.csproj -c Release -o /app
+WORKDIR "/src/Moneteer.Landing"
+RUN dotnet build "Moneteer.Landing.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish Moneteer.Landing.V2.csproj -c Release -o /app
+RUN dotnet publish "Moneteer.Landing.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Moneteer.Landing.V2.dll"]
+ENTRYPOINT ["dotnet", "Moneteer.Landing.dll"]
