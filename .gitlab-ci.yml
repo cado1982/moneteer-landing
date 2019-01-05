@@ -2,11 +2,16 @@ image: microsoft/dotnet:latest
 
 stages:
   - build
-  
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+
 before_script:
-  - "dotnet restore -s https://www.myget.org/F/dumpster-unicorn-fish/auth/$MYGET_API_KEY/api/v3/index.json -s https://api.nuget.org/v3/index.json"  
+  - "docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY"
+  - "dotnet restore -s https://api.nuget.org/v3/index.json"  
 
 build:
   stage: build
   script:
     - "dotnet build Moneteer.Landing --no-restore"
+    - "docker push $IMAGE_TAG"

@@ -13,7 +13,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.2105168" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" PrivateAssets="All" />
-    <PackageReference Include="Moneteer.Identity.Domain" Version="1.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
@@ -22,6 +21,12 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Moneteer.Identity.Domain">
+      <HintPath>Moneteer.Identity.Domain.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +42,15 @@
     <Content Update="Views\Shared\_NavigationPartial.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Moneteer.Identity.Domain.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Moneteer.Identity.Domain.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
