@@ -1,17 +1,23 @@
-image: microsoft/dotnet:latest
+image: docker:latest
 
 stages:
   - build
+
+services:
+  - docker:dind
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 before_script:
   - "docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY"
-  - "dotnet restore -s https://api.nuget.org/v3/index.json"  
 
 build:
   stage: build
   script:
-    - "dotnet build Moneteer.Landing --no-restore"
+    - "docker build Moneteer.Landing"
+
+deploy:
+  stage: publish
+  script:
     - "docker push $IMAGE_TAG"
