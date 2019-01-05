@@ -2,6 +2,7 @@ image: docker:latest
 
 stages:
   - build
+  - publish
 
 services:
   - docker:dind
