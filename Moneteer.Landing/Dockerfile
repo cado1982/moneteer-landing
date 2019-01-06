@@ -1,18 +1,27 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
-WORKDIR /app
-EXPOSE 80
-
+#Build Stage
 FROM microsoft/dotnet:2.1-sdk AS build
-WORKDIR /src
-COPY Moneteer.Landing.csproj .
-RUN dotnet restore "Moneteer.Landing.csproj"
-COPY . .
-RUN dotnet build "Moneteer.Landing.csproj" -c Release -o /app
-
-FROM build AS publish
-RUN dotnet publish "Moneteer.Landing.csproj" -c Release -o /app
-
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app .
+
+# Setup NodeJs
+RUN apt-get update && \
+    apt-get install -y wget && \
+    apt-get install -y gnupg2 && \
+    wget -qO- https://deb.nodesource.com/setup_6.x | bash - && \
+    apt-get install -y build-essential nodejs
+# End setup
+
+COPY Moneteer.Landing.csproj .
+RUN dotnet restore
+
+COPY . .
+RUN dotnet publish -c Release -o /publish --no-restore
+
+RUN npm install
+RUN npm install -g gulp
+RUN gulp scripts sass
+
+#Runtime Image Stage
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
+WORKDIR /public
+COPY --from=build /publish .
 ENTRYPOINT ["dotnet", "Moneteer.Landing.dll"]

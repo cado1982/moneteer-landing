@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  moneteer.landing:
+    image: ${DOCKER_REGISTRY-}moneteerlanding
+    build:
+      context: ./Moneteer.Landing
+      dockerfile: Dockerfile

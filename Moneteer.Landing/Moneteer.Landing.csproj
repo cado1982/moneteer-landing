@@ -5,6 +5,7 @@
     <UserSecretsId>aspnet-Moneteer.Landing-216989FD-7084-4F79-B296-569D0560CCC3</UserSecretsId>
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -52,5 +53,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  
+  
 
 </Project>
