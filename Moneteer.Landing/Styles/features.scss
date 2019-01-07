@@ -2,6 +2,8 @@
 
 #features {
     text-align: center;
+    border-bottom: $separator 1px solid;
+    padding: 70px;
 }
 
 #features > h2 {
@@ -12,8 +14,8 @@
     font-weight: 500;
 }
 
-.features_feature-column { 
-    display: flex;
+.features_feature-column {
+    display: flex; 
     flex-direction: column;
 }
 

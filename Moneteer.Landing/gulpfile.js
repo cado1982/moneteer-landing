@@ -3,6 +3,8 @@ var gulp = require("gulp");
 var merge = require("gulp-sequence");
 var sass = require("gulp-sass");
 var concat = require("gulp-concat");
+var plumber = require("gulp-plumber")
+var notify = require("gulp-notify");
 
 var deps = {
     "jquery": {
@@ -40,12 +42,20 @@ gulp.task("scripts", function () {
 
 gulp.task("sass", function () {
     return gulp.src("Styles/**/*.scss")
+        .pipe(plumber({
+            errorHandler: function (err) {
+                notify.onError({
+                    title: "Gulp error in " + err.plugin,
+                    message: err.toString()
+                })(err);
+                this.emit('end');
+            }
+        }))
         .pipe(sass())
         .pipe(concat("site.css"))
         .pipe(gulp.dest("wwwroot/css"));
 });
 
 gulp.task("sass:watch", function () {
-    gulp.start("sass");
-    gulp.watch("Styles/**/*.scss", [sass]);
+    gulp.watch("Styles/**/*.scss", ['sass']);
 });

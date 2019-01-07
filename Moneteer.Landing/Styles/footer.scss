@@ -3,8 +3,9 @@
 footer {
     display: flex;
     flex-direction: row;
-    background-color: $brand-light;
+    background-color: $brand;
     margin-top: 1em;
+    color: $font-light;
 }
 
 .footer-container {
@@ -12,4 +13,5 @@ footer {
     justify-content: center;
     text-align: center;
     padding: 4em;
+    color: $font-light;
 }

@@ -1,6 +1,12 @@
+h1 {
+  color: #5FA8D3;
+  font-size: 1.5rem; }
+
 
 #features {
-  text-align: center; }
+  text-align: center;
+  border-bottom: #d7d7d7 1px solid;
+  padding: 70px; }
 
 #features > h2 {
   color: #1B4965; }
@@ -26,14 +32,16 @@
 footer {
   display: flex;
   flex-direction: row;
-  background-color: #CAE9FF;
-  margin-top: 1em; }
+  background-color: #5FA8D3;
+  margin-top: 1em;
+  color: white; }
 
 .footer-container {
   flex: 0 0 50%;
   justify-content: center;
   text-align: center;
-  padding: 4em; }
+  padding: 4em;
+  color: white; }
 
 #jumbotron {
   font-weight: 800;
@@ -44,6 +52,9 @@ footer {
   text-align: center;
   padding-top: 8em;
   padding-bottom: 8em; }
+
+.jumbotron__content {
+  margin-top: 60px; }
 
 .jumbotron__content > h1 {
   font-size: 3rem;
@@ -62,4 +73,43 @@ footer {
   list-style: none; }
 
 #navigation {
-  background-color: #1B4965; }
+  background-color: #1B4965;
+  position: fixed;
+  width: 100%; }
+
+#pricing {
+  padding: 70px 200px;
+  text-align: center; }
+
+.pricing-container {
+  display: flex;
+  flex-wrap: wrap; }
+
+.card-container {
+  padding: 80px 60px;
+  flex: 1 1 50%; }
+
+#pricing .card {
+  text-align: center; }
+  #pricing .card .card-title {
+    font-size: 1.5rem;
+    padding: 20px;
+    border-bottom: #d7d7d7 1px solid;
+    color: #5FA8D3; }
+  #pricing .card hr {
+    border-color: #ffffff; }
+
+.cost-currency {
+  font-size: 1.2rem; }
+
+.cost-price {
+  font-size: 2.5rem; }
+
+.cost {
+  margin: 50px; }
+
+.signup {
+  margin: 20px; }
+
+.pricing-footnotes {
+  margin: 30px; }
