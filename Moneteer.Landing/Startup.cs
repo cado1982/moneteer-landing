@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Moneteer.Landing.V2.Helpers;
 using Moneteer.Identity.Domain;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Moneteer.Landing.Repositories;
 
 namespace Moneteer.Landing.V2
 {
@@ -37,6 +38,11 @@ namespace Moneteer.Landing.V2
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            var appConnectionString = Configuration.GetConnectionString("App");
+            services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = Configuration.GetConnectionString("App") });
+            services.AddSingleton<IConnectionProvider, ConnectionProvider>();
+            services.AddTransient<IBudgetRepository, BudgetRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Identity")));
             services.AddDefaultIdentity<IdentityUser>(options =>

@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Moneteer.Landing.Models;
+using Moneteer.Landing.Repositories;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 {
@@ -19,17 +21,23 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IBudgetRepository _budgetRepository;
+        private readonly IConnectionProvider _connectionProvider;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IBudgetRepository budgetRepository,
+            IConnectionProvider connectionProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _budgetRepository = budgetRepository;
+            _connectionProvider = connectionProvider;
         }
 
         [BindProperty]
@@ -81,6 +89,24 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                    var budget = new Budget
+                    {
+                        Available = 0,
+                        CurrencyCode = "USD",
+                        CurrencySymbolLocation = SymbolLocation.Before,
+                        DateFormat = "dd/MM/yyyy",
+                        DecimalPlaces = 2,
+                        DecimalSeparator = ".",
+                        ThousandsSeparator = ",",
+                        Name = "My Budget",
+                        UserId = new Guid(user.Id)
+                    };
+
+                    using (var conn = _connectionProvider.GetOpenConnection())
+                    {
+                        await _budgetRepository.Create(budget, conn);
+                    }
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
