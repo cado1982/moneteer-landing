@@ -9,6 +9,7 @@ namespace Moneteer.Landing.Repositories
 {
     public interface IBudgetRepository
     {
-        Task Create(Budget budget, IDbConnection connection);
+        Task<Budget> Create(Budget budget, IDbConnection connection);
+        Task<BudgetEnvelopes> CreateDefaultEnvelopes(Guid budgetId, IDbConnection conn);
     }
 }

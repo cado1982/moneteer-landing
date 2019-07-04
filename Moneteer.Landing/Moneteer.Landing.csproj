@@ -32,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Areas\Identity\Pages\Account\RegisterCheckEmail.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Home\_PricingPartial.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

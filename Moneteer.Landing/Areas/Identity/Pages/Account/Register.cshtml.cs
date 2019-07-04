@@ -104,12 +104,17 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                     };
 
                     using (var conn = _connectionProvider.GetOpenConnection())
+                    using (var transaction = conn.BeginTransaction())
                     {
-                        await _budgetRepository.Create(budget, conn);
+                        var budgetEntity = await _budgetRepository.Create(budget, conn);
+                        await _budgetRepository.CreateDefaultEnvelopes(budgetEntity.Id, conn);
+
+                        transaction.Commit();
                     }
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                    return RedirectToPage("./RegisterCheckEmail");
+                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    //return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {

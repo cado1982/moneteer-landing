@@ -9,8 +9,13 @@
         <a class="nav-link nav-text" href="#features">Features</a>
         <a class="nav-link nav-text" href="#pricing">Pricing</a>
         <a class="nav-link nav-text" href="#">About</a>
-        <a class="nav-link nav-text" href="https://localhost:4200">My Budgets</a>
     </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="header-cta">
+            <a class="btn btn-primary" href="https://localhost:4200">Launch App</a>
+        </div>
+    }
     <div class="header-actions">
         @if (User.Identity.IsAuthenticated)
         {
@@ -23,4 +28,5 @@
             <a class="nav-link nav-text" asp-controller="Account" asp-action="Login">Login</a>
         }
     </div>
+
 </header>

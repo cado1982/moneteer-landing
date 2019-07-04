@@ -58,6 +58,7 @@ footer {
 
 .jumbotron__content > h1 {
   font-size: 3rem;
+  line-height: 1;
   color: white;
   font-weight: bold; }
 
@@ -74,8 +75,18 @@ footer {
 
 #navigation {
   background-color: #1B4965;
-  position: fixed;
+  /*position: fixed;*/
   width: 100%; }
+
+#navigation > .header-cta {
+    display:flex;
+    margin: 0 2em;
+    align-items: center;
+}
+
+#navigation > .header-cta > .btn {
+    margin: 0;
+}
 
 #pricing {
   padding: 70px 200px;
