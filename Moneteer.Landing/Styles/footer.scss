@@ -1,17 +1,23 @@
 ﻿@import "colors.scss";
 
+@import "colors.scss";
+
+
 footer {
     display: flex;
     flex-direction: row;
-    background-color: $brand;
     margin-top: 1em;
-    color: $font-light;
+    border-top: 1px solid $separator;
+    padding: 1em;
 }
 
-.footer-container {
-    flex: 0 0 50%;
-    justify-content: center;
-    text-align: center;
-    padding: 4em;
-    color: $font-light;
+.footer-copyright {
+    flex: 1 0 auto;
+}
+
+.footer-links {
+    flex: 0 0 auto;
+    ul {
+        list-style-type: none;
+    }
 }

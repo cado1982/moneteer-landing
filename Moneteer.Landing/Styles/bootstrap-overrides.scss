@@ -1,0 +1,10 @@
+﻿$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+$body-bg: #FCFCFC;
+$body-color: #363636;
+
+body > .container-fluid {
+    padding: 0;
+} 
+
+@import "../node_modules/bootstrap/scss/bootstrap";

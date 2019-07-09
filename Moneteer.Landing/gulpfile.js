@@ -8,18 +8,10 @@ var notify = require("gulp-notify");
 
 var deps = {
     "jquery": {
-        "dist/*": ""
+        "dist/jquery.slim.min.js": ""
     },
-    "@clr/ui": {
-        "*": ""
-    },
-    "@clr/icons": {
-        "clr-icons.css": "",
-        "clr-icons.min.css": "",
-        "clr-icons.min.js": ""
-    },
-    "@webcomponents/custom-elements": {
-        "custom-elements.min.js": ""
+    "bootstrap": {
+        "dist/js/bootstrap.bundle.min.js": ""
     },
     "qrcodejs": {
         "qrcode.min.js": ""

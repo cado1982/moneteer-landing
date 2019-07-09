@@ -1,32 +1,45 @@
-﻿<header class="header" id="navigation">
-    <div class="branding">
-        <a href="/" class="nav-link">
-            <clr-icon shape="dollar-bill" class="is-success"></clr-icon>
-            <span class="title">Moneteer</span>
-        </a>
-    </div>
-    <div class="header-nav">
-        <a class="nav-link nav-text" href="#features">Features</a>
-        <a class="nav-link nav-text" href="#pricing">Pricing</a>
-        <a class="nav-link nav-text" href="#">About</a>
-    </div>
-    @if (User.Identity.IsAuthenticated)
-    {
-        <div class="header-cta">
-            <a class="btn btn-primary" href="https://localhost:4200">Launch App</a>
-        </div>
-    }
-    <div class="header-actions">
-        @if (User.Identity.IsAuthenticated)
-        {
-            <a class="nav-link nav-text" asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
-            <a class="nav-link nav-text" asp-controller="Account" asp-action="Logout">Log out</a>
-        }
-        else
-        {
-            <a class="nav-link nav-text" asp-area="Identity" asp-page="/Account/Register">Register</a>
-            <a class="nav-link nav-text" asp-controller="Account" asp-action="Login">Login</a>
-        }
-    </div>
+﻿<nav class="navbar navbar-toggleable-md navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Moneteer</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-</header>
+
+            <ul class="navbar-nav mr-auto">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="https://localhost:4200">Launch App</a>
+                    </li>
+                }
+            </ul>
+
+
+            <ul class="navbar-nav">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Account" asp-action="Logout">Log out</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+    </div>
+</nav>
