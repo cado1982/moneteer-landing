@@ -23,8 +23,11 @@ build:
 release:
   stage: release
   script:
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-    - docker push $CONTAINER_RELEASE_IMAGE
+    # - docker pull $CONTAINER_TEST_IMAGE
+    # - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    # - docker push $CONTAINER_RELEASE_IMAGE
+    - docker login --email=cado82@gmail.com --username=cado82@gmail.com --password=$HEROKU-AUTH-TOKEN registry.heroku.com
+    - docker tag registry.gitlab.com/cado82/moneteer-landing:latest registry.heroku.com/cado82/moneteer-landing:latest
+    - docker push registry.heroku.com/cado82/moneteer-landing:latest
   only:
-    - master
+    - redesign
