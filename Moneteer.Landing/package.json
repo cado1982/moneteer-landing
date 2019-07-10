@@ -1,7 +1,7 @@
-﻿{
-  "name": "moneteer.landing.v2",
+{
+  "name": "moneteer.landing",
   "version": "1.0.0",
-  "description": "",
+  "description": "Landing page for Moneteer budgeting app",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

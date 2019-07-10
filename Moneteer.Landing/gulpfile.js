@@ -6,34 +6,18 @@ var concat = require("gulp-concat");
 var plumber = require("gulp-plumber")
 var notify = require("gulp-notify");
 
-var deps = {
-    "jquery": {
-        "dist/jquery.slim.min.js": ""
-    },
-    "bootstrap": {
-        "dist/js/bootstrap.bundle.min.js": ""
-    },
-    "qrcodejs": {
-        "qrcode.min.js": ""
-    }
-};
-
 gulp.task("scripts", function () {
-    var streams = [];
-
-    for (var prop in deps) {
-        console.log("Prepping Scripts for: " + prop);
-        for (var itemProp in deps[prop]) {
-            streams.push(gulp.src("node_modules/" + prop + "/" + itemProp)
-                .pipe(gulp.dest("wwwroot/lib/" + prop + "/" + deps[prop][itemProp])));
-        }
-    }
-
-    return merge(streams);
+    return gulp.src([
+        'node_modules/jquery/dist/jquery.slim.min.js',
+        'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
+        'node_modules/qrcodejs/qrcode.min.js'
+    ])
+        .pipe(concat('vendor.min.js')) 
+        .pipe(gulp.dest('wwwroot/lib'));
 });
 
-gulp.task("sass", function () {
-    return gulp.src("Styles/**/*.scss")
+gulp.task("styles", function () {
+    var sassSource = gulp.src("Styles/**/*.scss")
         .pipe(plumber({
             errorHandler: function (err) {
                 notify.onError({
@@ -43,11 +27,20 @@ gulp.task("sass", function () {
                 this.emit('end');
             }
         }))
-        .pipe(sass())
-        .pipe(concat("site.css"))
-        .pipe(gulp.dest("wwwroot/css"));
+
+        var regular = sassSource.pipe(sass())
+                                .pipe(concat("site.css"))
+                                .pipe(gulp.dest("wwwroot/css"));
+        var minified = sassSource.pipe(sass({outputStyle: "compressed"}))
+                                 .pipe(concat("site.min.css"))
+                                 .pipe(gulp.dest("wwwroot/css"));
+
+        return merge(regular, minified);
 });
 
-gulp.task("sass:watch", function () {
-    gulp.watch("Styles/**/*.scss", ['sass']);
+gulp.task("styles:watch", function () {
+    gulp.watch("Styles/**/*.scss", ['styles']);
 });
+
+gulp.task("build", ["scripts", "styles"]);
+gulp.task("watch", ["styles:watch"]);
