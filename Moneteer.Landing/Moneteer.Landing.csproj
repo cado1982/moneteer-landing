@@ -34,11 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\images\ON-2%402x.png" />
-    <Content Remove="wwwroot\images\OSV-1%402x.png" />
-    <Content Remove="wwwroot\fonts\Metropolis-Bold.woff" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Update="Areas\Identity\Pages\Account\RegisterCheckEmail.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

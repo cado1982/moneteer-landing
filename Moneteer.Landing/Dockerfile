@@ -14,10 +14,11 @@ COPY Moneteer.Landing.csproj .
 RUN dotnet restore
 
 COPY . .
-RUN dotnet publish -c Release -o /publish --no-restore
 
 RUN npm install
 RUN npm run gulp-build
+
+RUN dotnet publish -c Release -o /publish --no-restore
 
 #Runtime Image Stage
 FROM microsoft/dotnet:2.1-aspnetcore-runtime
