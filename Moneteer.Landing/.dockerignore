@@ -3,3 +3,5 @@ obj/
 Dockerfile
 .dockerignore
 node_modules/
+wwwroot/lib/
+wwwroot/css/
