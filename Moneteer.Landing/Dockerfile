@@ -17,8 +17,7 @@ COPY . .
 RUN dotnet publish -c Release -o /publish --no-restore
 
 RUN npm install
-RUN npm install -g gulp
-RUN gulp scripts sass
+RUN npm run gulp-run
 
 #Runtime Image Stage
 FROM microsoft/dotnet:2.1-aspnetcore-runtime

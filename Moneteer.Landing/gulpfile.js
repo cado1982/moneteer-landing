@@ -32,6 +32,11 @@ gulp.task("scripts", function () {
     return merge(streams);
 });
 
+gulp.task("fonts", function () {
+    gulp.src("Fonts/**/*")
+        .pipe(gulp.dest("wwwroot/fonts"))
+})
+
 gulp.task("sass", function () {
     return gulp.src("Styles/**/*.scss")
         .pipe(plumber({

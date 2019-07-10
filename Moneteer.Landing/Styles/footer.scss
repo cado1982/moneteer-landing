@@ -1,13 +1,10 @@
 ﻿@import "colors.scss";
 
-@import "colors.scss";
-
-
 footer {
     display: flex;
     flex-direction: row;
     margin-top: 1em;
-    border-top: 1px solid $separator;
+    border-top: 1px solid $separator-color;
     padding: 1em;
 }
 
@@ -17,7 +14,17 @@ footer {
 
 .footer-links {
     flex: 0 0 auto;
+
     ul {
+        padding-left: 0;
         list-style-type: none;
+
+        li {
+            display: inline;
+            margin-left: 1em;
+        }
+        li:first-of-type {
+            margin-left: 0;
+        }
     }
 }

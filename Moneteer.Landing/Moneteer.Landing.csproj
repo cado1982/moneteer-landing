@@ -24,6 +24,9 @@
   <ItemGroup>
     <Folder Include="Areas\Identity\Services\" />
     <Folder Include="wwwroot\lib\" />
+    <Folder Include="Fonts\" />
+    <Folder Include="Images\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +35,11 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\images\ON-1%402x.png" />
+    <Content Remove="wwwroot\images\ON-2%402x.png" />
+    <Content Remove="wwwroot\images\OSV-1%402x.png" />
+  </ItemGroup>
   <ItemGroup>
     <Content Update="Areas\Identity\Pages\Account\RegisterCheckEmail.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
@@ -54,6 +62,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\Metropolis-BoldItalic.woff2" />
+    <None Remove="Fonts\Metropolis-BlackItalic.woff2" />
+    <None Remove="Fonts\Metropolis-Black.woff2" />
+    <None Remove="Fonts\Metropolis-Thin.woff2" />
+    <None Remove="Fonts\Metropolis-SemiBold.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\images\ON-1%402x.png" />
+    <None Include="wwwroot\images\ON-2%402x.png" />
+    <None Include="wwwroot\images\OSV-1%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="Moneteer.Identity.Domain.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -61,7 +81,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  
-  
-
 </Project>

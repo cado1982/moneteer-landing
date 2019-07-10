@@ -1,37 +1,33 @@
 ﻿@import "colors.scss";
 
-#features {
-    text-align: center;
-    border-bottom: $separator 1px solid;
-    padding: 70px;
+.feature-image > img {
+    width: 100%;
+    height: auto;
 }
 
-#features > h2 {
-    color: $brand-dark;
+#features.container {
+    max-width: 800px;
 }
 
-#features > h2 > strong {
-    font-weight: 500;
+.feature {
+    border-bottom: 1px solid $separator-color;
+    align-items: center;
+    padding-bottom: 2em;
+    padding-top: 2em;
+
+    .feature-text {
+        > h4 {
+            font-weight: 800;
+            color: $brand-dark-color;
+        }
+    }
 }
 
-.features_feature-column {
-    display: flex; 
-    flex-direction: column;
-}
-
-.features_feature {
-    margin: 1em;
-    padding: 1em;
-    background-color: $brand-light;
-    color: $font-dark;
-    border-radius: 5px;
-}
-
-.features_feature-header {
-    font-size: large;
-    font-weight: bold;
-}
-
-.features_feature-description {
-
+.circle {
+    width: 50px;
+    height: 50px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background: rgba(#A49BDC, 0.5);
 }

@@ -1,9 +1,5 @@
-h1 {
-  color: #5FA8D3;
-  font-size: 1.5rem; }
-
-body > .container-fluid {
-  padding: 0; }
+.header-text-shadow {
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); }
 
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
@@ -38,7 +34,7 @@ body > .container-fluid {
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-sans-serif: "Metropolis", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
 *,
@@ -57,7 +53,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Metropolis", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -4153,7 +4149,7 @@ a.close.disabled {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Metropolis", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -4238,7 +4234,7 @@ a.close.disabled {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: -apple-system, BlinkMacSystemFont, "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Metropolis", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -7027,32 +7023,84 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6; } }
 
+body > .container-fluid {
+  padding: 0; }
 
-#features {
-  text-align: center;
-  border-bottom: #d7d7d7 1px solid;
-  padding: 70px; }
+nav.bg-dark {
+  background-color: #4E40A5 !important; }
 
-#features > h2 {
-  color: #1B4965; }
+.btn-primary {
+  color: #212529;
+  background-color: #F29F04;
+  border-color: #cc8603; }
+  .btn-primary:hover {
+    color: #fff;
+    background-color: #c07e03;
+    border-color: #fbab14; }
+  .btn-primary:focus, .btn-primary.focus {
+    box-shadow: 0 0 0 0.2rem rgba(179, 120, 9, 0.5); }
+  .btn-primary.disabled, .btn-primary:disabled {
+    color: #212529;
+    background-color: #F29F04;
+    border-color: #cc8603; }
+  .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+  .show > .btn-primary.dropdown-toggle {
+    color: #212529;
+    background-color: #fcb42d;
+    border-color: #5b3c02; }
+    .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
+    .show > .btn-primary.dropdown-toggle:focus {
+      box-shadow: 0 0 0 0.2rem rgba(179, 120, 9, 0.5); }
 
-#features > h2 > strong {
-  font-weight: 500; }
+.btn-outline-primary {
+  color: #F29F04;
+  border-color: #F29F04; }
+  .btn-outline-primary:hover {
+    color: #222222;
+    background-color: #fbab14;
+    border-color: #F29F04; }
+  .btn-outline-primary:focus, .btn-outline-primary.focus {
+    box-shadow: 0 0 0 0.2rem rgba(242, 159, 4, 0.5); }
+  .btn-outline-primary.disabled, .btn-outline-primary:disabled {
+    color: #F29F04;
+    background-color: transparent; }
+  .btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active,
+  .show > .btn-outline-primary.dropdown-toggle {
+    color: #212529;
+    background-color: #fbab14;
+    border-color: #F29F04; }
+    .btn-outline-primary:not(:disabled):not(.disabled):active:focus, .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
+    .show > .btn-outline-primary.dropdown-toggle:focus {
+      box-shadow: 0 0 0 0.2rem rgba(242, 159, 4, 0.5); }
 
-.features_feature-column {
-  display: flex;
-  flex-direction: column; }
 
-.features_feature {
-  margin: 1em;
-  padding: 1em;
-  background-color: #CAE9FF;
-  color: black;
-  border-radius: 5px; }
+.feature-image > img {
+  width: 100%;
+  height: auto; }
 
-.features_feature-header {
-  font-size: large;
-  font-weight: bold; }
+#features.container {
+  max-width: 800px; }
+
+.feature {
+  border-bottom: 1px solid #d7d7d7;
+  align-items: center;
+  padding-bottom: 2em;
+  padding-top: 2em; }
+  .feature .feature-text > h4 {
+    font-weight: 800;
+    color: #4E40A5; }
+
+.circle {
+  width: 50px;
+  height: 50px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+  background: rgba(164, 155, 220, 0.5); }
+
+@font-face {
+  font-family: 'Metropolis';
+  src: url("/fonts/Metropolis-Regular.woff2") format("woff2"), url("/fonts/Metropolis-Regular.woff") format("woff"), url("/fonts/Metropolis-Regular.ttf") format("truetype"); }
 
 footer {
   display: flex;
@@ -7067,7 +7115,34 @@ footer {
 .footer-links {
   flex: 0 0 auto; }
   .footer-links ul {
+    padding-left: 0;
     list-style-type: none; }
+    .footer-links ul li {
+      display: inline;
+      margin-left: 1em; }
+    .footer-links ul li:first-of-type {
+      margin-left: 0; }
+
+.navbar-brand > h1 {
+  padding: 0;
+  margin: 0; }
+
+.navbar-nav > .nav-item > .nav-link {
+  color: #FFFFFF; }
+
+.jumbotron {
+  background: #5848BF;
+  background: linear-gradient(315deg, #7268AF, #5848BF);
+  text-align: center;
+  color: #FFFFFF;
+  border-radius: 0; }
+  .jumbotron h1 {
+    font-weight: 800;
+    letter-spacing: 0.03em; }
+  .jumbotron .btn {
+    text-transform: uppercase;
+    color: #FFFFFF;
+    font-weight: 600; }
 
 #pricing {
   padding: 70px 200px;
@@ -7087,7 +7162,7 @@ footer {
     font-size: 1.5rem;
     padding: 20px;
     border-bottom: #d7d7d7 1px solid;
-    color: #5FA8D3; }
+    color: #5848BF; }
   #pricing .card hr {
     border-color: #ffffff; }
 

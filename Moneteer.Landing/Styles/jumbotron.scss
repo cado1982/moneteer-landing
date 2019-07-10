@@ -1,0 +1,18 @@
+﻿@import "colors.scss";
+
+.jumbotron {
+    background: $brand-color;
+    background: linear-gradient(315deg, $brand-light-color, $brand-color);
+    text-align: center;
+    color: $text-light-color;
+    border-radius: 0;
+    h1 {
+        font-weight: 800;
+        letter-spacing: 0.03em;
+    }
+    .btn {
+        text-transform: uppercase;
+        color: $text-light-color;
+        font-weight: 600;
+    }
+}

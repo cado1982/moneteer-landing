@@ -1,7 +1,6 @@
 ﻿@import "colors.scss";
 
-h1 {
-    color: $brand;
-    font-size: 1.5rem;
+.header-text-shadow {
+    text-shadow: 0 3px 6px $text-dark-shadow-color;
 }
 
