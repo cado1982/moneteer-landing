@@ -22,3 +22,15 @@
         }
     }
 }
+
+.circle {
+    background: radial-gradient(circle, transparent 50%, #A49BDC88 30%);
+    border-radius: 100%;
+    width: 1700px;
+    height: 1700px;
+    position: absolute;
+    z-index: -10;
+    top: -150px;
+    left: 100px;
+    //display: none;
+} 

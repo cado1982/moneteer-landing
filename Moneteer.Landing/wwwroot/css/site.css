@@ -7098,6 +7098,16 @@ nav.bg-dark {
     font-weight: 800;
     color: #4E40A5; }
 
+.circle {
+  background: radial-gradient(circle, transparent 50%, #A49BDC88 30%);
+  border-radius: 100%;
+  width: 1700px;
+  height: 1700px;
+  position: absolute;
+  z-index: -10;
+  top: -150px;
+  left: 100px; }
+
 footer {
   margin-top: 1em;
   border-top: 1px solid #d7d7d7;
@@ -7130,9 +7140,6 @@ footer {
   .jumbotron h1 {
     font-weight: 600;
     letter-spacing: 0.03em; }
-  .jumbotron .btn {
-    text-transform: uppercase;
-    color: #FFFFFF; }
 
 #newsletter {
   display: flex;
