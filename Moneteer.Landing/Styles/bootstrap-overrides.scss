@@ -1,8 +1,8 @@
 ﻿@import "colors.scss";
 
-$font-family-sans-serif: "Metropolis", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-family-sans-serif: "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-$body-bg: #FCFCFC;
+$body-bg: $body-color;
 $body-color: $text-dark-color;
 
 // Variables must be above this and css below.

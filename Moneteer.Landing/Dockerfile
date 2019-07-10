@@ -1,4 +1,4 @@
-#Build Stage
+﻿#Build Stage
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /app
 
@@ -17,7 +17,7 @@ COPY . .
 RUN dotnet publish -c Release -o /publish --no-restore
 
 RUN npm install
-RUN npm run gulp-run
+RUN npm run gulp-build
 
 #Runtime Image Stage
 FROM microsoft/dotnet:2.1-aspnetcore-runtime

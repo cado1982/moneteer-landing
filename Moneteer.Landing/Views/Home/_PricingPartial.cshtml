@@ -1,50 +1,46 @@
-﻿<section id="pricing">
-    <h1>Pricing</h1>
-    <div class="pricing-container">
-        <div class="card-container">
-            <div class="card">
-                <div class="card-block">
-                    <div class="card-title">
-                        Monthly
-                    </div>
-                    <div class="card-text">
-                        <div class="cost">
-                            <span class="cost-currency">$</span>
-                            <span class="cost-price">2.99</span>
-                            <span class="cost-interval">/ month</span>
-                        </div>
+﻿<section class="py-3 py-md-5" id="pricing">
+    <h1 class="header-text-shadow">Pricing</h1>
+    <div class="container-fluid">
+        <div class="row justify-content-around">
+            <div class="col-md-4 mb-5 mb-md-0">
+                <div class="price" >
+                    <h3 class="price-header">Monthly</h3>
+                    <div class="price-description">
+                        <div class="cost mt-3">
+                            <span class="cost-symbol">$</span>
+                            <span class="cost-value">2.99</span>
+                            <span class="cost-duration">/ month</span>
 
-                        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary signup">Start free trial</a>
-                        <div class="pricing-footnotes">
-                            <div>Free 30 day trial.</div>
-                            <div>Subscription billed monthly. Cancel at any time.</div>
                         </div>
+                        <a class="btn btn-primary my-4" href="#">FREE 30 DAY TRIAL</a>
+                        <ul>
+                            <li>Subscription billed monthly</li>
+                            <li>Cancel any time</li>
+                        </ul>
                     </div>
                 </div>
+
+            </div>
+            <div class="col-md-4 mb-5 mb-md-0">
+                <div class="price" >
+                    <h3 class="price-header">Yearly</h3>
+                    <div class="price-description">
+                        <div class="cost mt-3">
+                            <span class="cost-symbol">$</span>
+                            <span class="cost-value">2.49</span>
+                            <span class="cost-duration">/ month</span>
+
+                        </div>
+                        <a class="btn btn-primary my-4" href="#">FREE 30 DAY TRIAL</a>
+                        <ul>
+                            <li>Subscription billed yearly ($29.88 per year)</li>
+                            <li>Cancel any time</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <div class="card-container">
-            <div class="card">
-                <div class="card-block">
-                    <div class="card-title">
-                        Yearly
-                    </div>
-                    <div class="card-text">
-                        <div class="cost">
-                            <span class="cost-currency">$</span>
-                            <span class="cost-price">31.99</span>
-                            <span class="cost-interval">/ year</span>
-                        </div>
-
-                        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary signup">Start free trial</a>
-                        <div class="pricing-footnotes">
-                            <div>Free 30 day trial.</div>
-                            <div>Subscription billed yearly. Cancel at any time.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </section>

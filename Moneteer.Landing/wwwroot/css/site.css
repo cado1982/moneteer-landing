@@ -1,6 +1,17 @@
 .header-text-shadow {
   text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); }
 
+ul > li {
+  list-style-type: none; }
+
+ul {
+  padding: 0 !important;
+  margin: 0 !important; }
+
+.btn.btn-primary {
+  color: #FFFFFF;
+  text-transform: uppercase; }
+
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 The Bootstrap Authors
@@ -34,7 +45,7 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: "Metropolis", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-sans-serif: "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
 *,
@@ -53,7 +64,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Metropolis", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -4149,7 +4160,7 @@ a.close.disabled {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: "Metropolis", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -4234,7 +4245,7 @@ a.close.disabled {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: "Metropolis", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -7078,50 +7089,28 @@ nav.bg-dark {
   width: 100%;
   height: auto; }
 
-#features.container {
-  max-width: 800px; }
+.feature:last-child {
+  border-bottom: 0; }
 
 .feature {
-  border-bottom: 1px solid #d7d7d7;
-  align-items: center;
-  padding-bottom: 2em;
-  padding-top: 2em; }
+  align-items: center; }
   .feature .feature-text > h4 {
     font-weight: 800;
     color: #4E40A5; }
 
-.circle {
-  width: 50px;
-  height: 50px;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  border-radius: 25px;
-  background: rgba(164, 155, 220, 0.5); }
-
-@font-face {
-  font-family: 'Metropolis';
-  src: url("/fonts/Metropolis-Regular.woff2") format("woff2"), url("/fonts/Metropolis-Regular.woff") format("woff"), url("/fonts/Metropolis-Regular.ttf") format("truetype"); }
-
 footer {
-  display: flex;
-  flex-direction: row;
   margin-top: 1em;
   border-top: 1px solid #d7d7d7;
   padding: 1em; }
 
-.footer-copyright {
-  flex: 1 0 auto; }
-
-.footer-links {
-  flex: 0 0 auto; }
-  .footer-links ul {
-    padding-left: 0;
-    list-style-type: none; }
-    .footer-links ul li {
-      display: inline;
-      margin-left: 1em; }
-    .footer-links ul li:first-of-type {
-      margin-left: 0; }
+.footer-links ul {
+  padding-left: 0;
+  list-style-type: none; }
+  .footer-links ul li {
+    display: inline;
+    margin-left: 1em; }
+  .footer-links ul li:first-of-type {
+    margin-left: 0; }
 
 .navbar-brand > h1 {
   padding: 0;
@@ -7135,48 +7124,47 @@ footer {
   background: linear-gradient(315deg, #7268AF, #5848BF);
   text-align: center;
   color: #FFFFFF;
-  border-radius: 0; }
+  border-radius: 0;
+  padding: 6em 2em;
+  margin-bottom: 0; }
   .jumbotron h1 {
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: 0.03em; }
   .jumbotron .btn {
     text-transform: uppercase;
-    color: #FFFFFF;
-    font-weight: 600; }
+    color: #FFFFFF; }
+
+#newsletter {
+  display: flex;
+  flex-direction: column; }
+  #newsletter > h3 {
+    color: #4E40A5; }
 
 #pricing {
-  padding: 70px 200px;
+  background-color: #5848BF;
   text-align: center; }
+  #pricing > h1 {
+    color: #FFFFFF;
+    margin-bottom: 1em; }
 
-.pricing-container {
-  display: flex;
-  flex-wrap: wrap; }
-
-.card-container {
-  padding: 80px 60px;
-  flex: 1 1 50%; }
-
-#pricing .card {
-  text-align: center; }
-  #pricing .card .card-title {
-    font-size: 1.5rem;
-    padding: 20px;
-    border-bottom: #d7d7d7 1px solid;
-    color: #5848BF; }
-  #pricing .card hr {
-    border-color: #ffffff; }
-
-.cost-currency {
-  font-size: 1.2rem; }
-
-.cost-price {
-  font-size: 2.5rem; }
+.price {
+  background-color: #FCFCFC;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  padding: 1em; }
+  .price .price-header {
+    border-bottom: 1px solid #d7d7d7;
+    color: #4E40A5;
+    text-shadow: 0 0.1em 0 rgba(0, 0, 0, 0.2);
+    padding-bottom: 1em; }
+  .price .price-description ul {
+    font-size: 0.8em; }
 
 .cost {
-  margin: 50px; }
-
-.signup {
-  margin: 20px; }
-
-.pricing-footnotes {
-  margin: 30px; }
+  font-size: 2em; }
+  .cost .cost-symbol {
+    font-size: 0.5em;
+    vertical-align: text-top; }
+  .cost .cost-value {
+    letter-spacing: 0.1em; }
+  .cost .cost-duration {
+    font-size: 0.6em; }
