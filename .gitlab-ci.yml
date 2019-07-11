@@ -10,6 +10,7 @@ services:
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  HEROKU_RELEASE_IMAGE: registry.heroku.com/moneteer/web
 
 before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
@@ -25,12 +26,10 @@ release:
     CI_DEBUG_TRACE: "true"
   stage: release
   script:
-    
-    # - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-    # - docker push $CONTAINER_RELEASE_IMAGE
     - docker login --username=_ --password=$HEROKU_AUTH_KEY registry.heroku.com
-    - docker pull registry.gitlab.com/cado82/moneteer-landing:latest
-    - docker tag registry.gitlab.com/cado82/moneteer-landing:latest registry.heroku.com/moneteer/web
-    - docker push registry.heroku.com/moneteer/web
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $HEROKU_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker push $HEROKU_RELEASE_IMAGE
   only:
     - redesign
