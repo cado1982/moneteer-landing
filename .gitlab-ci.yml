@@ -27,6 +27,7 @@ release:
   stage: release
   script:
     - docker login --username=_ --password=$HEROKU_AUTH_KEY registry.heroku.com
+    - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $HEROKU_RELEASE_IMAGE
     - docker push $CONTAINER_RELEASE_IMAGE
