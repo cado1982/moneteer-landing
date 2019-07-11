@@ -24,4 +24,4 @@ RUN dotnet publish -c Release -o /publish --no-restore
 FROM microsoft/dotnet:2.1-aspnetcore-runtime
 WORKDIR /public
 COPY --from=build /publish .
-ENTRYPOINT ["dotnet", "Moneteer.Landing.dll"]
+CMD ["dotnet", "Moneteer.Landing.dll"]
