@@ -24,4 +24,4 @@ RUN dotnet publish -c Release -o /publish --no-restore
 FROM microsoft/dotnet:2.1-aspnetcore-runtime
 WORKDIR /public
 COPY --from=build /publish .
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet Moneteer.Landing.dll
+ENTRYPOINT ["dotnet", "Moneteer.Landing.dll"]

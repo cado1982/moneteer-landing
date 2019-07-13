@@ -57,7 +57,7 @@ namespace Moneteer.Landing.V2
             {
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("https://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+                    policy.WithOrigins(Configuration.GetValue("CorsAllowedOrigins", String.Empty)).AllowAnyHeader().AllowAnyMethod();
                 });
             });
             services.Configure<IdentityOptions>(options =>
@@ -78,7 +78,7 @@ namespace Moneteer.Landing.V2
             .AddCookie()
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
-                options.Authority = $"https://localhost:4400";
+                options.Authority = Configuration.GetValue<string>("OpenIdConnectAuthority");
 
                 options.ClientId = "moneteer-mvc";
 

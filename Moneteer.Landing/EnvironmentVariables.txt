@@ -1,0 +1,3 @@
+CorsAllowedOrigins Default: "https://localhost:4200"
+OpenIdConnectAuthority Default: "https://localhost:4400"
+ASPNETCORE_URLS Default: "https://localhost:4500"
