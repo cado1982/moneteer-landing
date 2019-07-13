@@ -24,8 +24,6 @@ build:
     - docker push $CONTAINER_TEST_IMAGE
 
 release:
-  variables:
-    CI_DEBUG_TRACE: "true"
   stage: release
   script:
     - docker pull $CONTAINER_TEST_IMAGE
