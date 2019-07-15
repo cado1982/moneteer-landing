@@ -69,6 +69,7 @@
     <None Remove="Fonts\Metropolis-Black.woff2" />
     <None Remove="Fonts\Metropolis-Thin.woff2" />
     <None Remove="Fonts\Metropolis-SemiBold.woff2" />
+    <None Remove="dive.log" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Moneteer.Identity.Domain.dll">

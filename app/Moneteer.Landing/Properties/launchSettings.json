@@ -1,11 +1,11 @@
-{
+﻿{
   "profiles": {
     "Project": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:4500"
+      "applicationUrl": "http://localhost:4500"
     },
     "Docker": {
       "commandName": "Docker",

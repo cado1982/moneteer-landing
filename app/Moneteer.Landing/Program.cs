@@ -20,7 +20,7 @@ namespace Moneteer.Landing.V2
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Literate)
                 .CreateLogger();
 
-            BuildWebHost(args).Run();
+                BuildWebHost(args).Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

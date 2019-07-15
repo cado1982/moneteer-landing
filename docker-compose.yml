@@ -1,0 +1,19 @@
+version: "3"
+services:
+  app:
+    build:
+      context: ./app/Moneteer.Landing
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - OpenIdConnectAuthority=https://localhost:4400
+  proxy:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - app
