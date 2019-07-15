@@ -1,14 +1,19 @@
 version: "3"
 services:
   app:
+    image:
+      - moneteer/landing/app:$IMAGE_TAG
     build:
       context: ./app/Moneteer.Landing
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
     environment:
-      - OpenIdConnectAuthority=https://localhost:4400
+      - OpenIdConnectAuthority=$OPEN_ID_CONNECT_AUTHORITY
+      - CorsAllowedOrigins=$CORS_ALLOWED_ORIGINS
   proxy:
+    image:
+      - moneteer/landing/proxy:$IMAGE_TAG
     build:
       context: ./nginx
       dockerfile: Dockerfile
