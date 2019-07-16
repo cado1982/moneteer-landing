@@ -22,9 +22,12 @@ namespace Moneteer.Landing.V2
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IHostingEnvironment _env;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -68,12 +71,14 @@ namespace Moneteer.Landing.V2
 
                 options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
+                
             });
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                
             })
             .AddCookie()
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
@@ -84,7 +89,7 @@ namespace Moneteer.Landing.V2
 
                 options.RemoteAuthenticationTimeout = TimeSpan.FromHours(2);
                 options.ResponseType = "id_token";
-
+                options.RequireHttpsMetadata = !_env.IsDevelopment();
                 options.Scope.Clear();
                 options.Scope.Add("openid profile");
 

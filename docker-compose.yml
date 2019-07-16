@@ -1,24 +1,18 @@
 version: "3"
 services:
   app:
-    image:
-      - moneteer/landing/app:$IMAGE_TAG
     build:
-      context: ./app/Moneteer.Landing
+      context: app/Moneteer.Landing
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
     environment:
-      - OpenIdConnectAuthority=$OPEN_ID_CONNECT_AUTHORITY
-      - CorsAllowedOrigins=$CORS_ALLOWED_ORIGINS
+      - OpenIdConnectAuthority=http://localhost:4400
+      - CorsAllowedOrigins=http://localhost:4200
+      - ASPNETCORE_ENVIRONMENT=Development
   proxy:
-    image:
-      - moneteer/landing/proxy:$IMAGE_TAG
     build:
-      context: ./nginx
+      context: nginx
       dockerfile: Dockerfile
     ports:
       - "80:80"
-      - "443:443"
-    links:
-      - app
