@@ -8,6 +8,11 @@ task_definition:
   services:
     app:
       essential: true
+      secrets:
+        - value_from: MoneteerIdentityConnectionString
+          name: ConnectionStrings:Identity
+        - value_from: MoneteerAppConnectionString
+          name: ConnectionStrings:App
     proxy:
       essential: true
 run_params:
