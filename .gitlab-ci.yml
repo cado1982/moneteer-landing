@@ -38,4 +38,4 @@ release:
     - docker push $APP_RELEASE_IMAGE
     - docker push $PROXY_RELEASE_IMAGE
   only:
-    - redesign
+    - master
