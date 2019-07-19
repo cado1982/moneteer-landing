@@ -105,6 +105,14 @@ namespace Moneteer.Landing.V2
             });
 
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddSingleton(new SmtpConnectionInfo
+            {
+                Host = Configuration["SmtpHost"],
+                Username = Configuration["SmtpUsername"],
+                Port = Configuration["SmtpPort"] == null ? 0 : int.Parse(Configuration["SmtpPort"]),
+                Password = Configuration["SmtpPassword"],
+                FromAddress = Configuration["SmtpFromAddress"]
+            });
 
             services.AddMvc(/*options => 
             {
