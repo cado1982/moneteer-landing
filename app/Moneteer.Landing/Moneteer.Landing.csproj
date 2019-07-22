@@ -70,14 +70,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Fonts\Metropolis-BoldItalic.woff2" />
-    <None Remove="Fonts\Metropolis-BlackItalic.woff2" />
-    <None Remove="Fonts\Metropolis-Black.woff2" />
-    <None Remove="Fonts\Metropolis-Thin.woff2" />
-    <None Remove="Fonts\Metropolis-SemiBold.woff2" />
-    <None Remove="dive.log" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="Moneteer.Identity.Domain.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

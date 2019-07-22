@@ -10,12 +10,12 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Moneteer.Landing/bin/Debug/netcoreapp2.1/Moneteer.Landing.dll",
+            "program": "${workspaceFolder}/app/Moneteer.Landing/bin/Debug/netcoreapp2.1/Moneteer.Landing.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Moneteer.Landing",
+            "cwd": "${workspaceFolder}/app/Moneteer.Landing",
             "stopAtEntry": false,
             "launchBrowser": {
-                "enabled": true
+                "enabled": false
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
