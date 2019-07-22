@@ -21,8 +21,5 @@ services:
         awslogs-group: "moneteer-landing"
         awslogs-stream-prefix: "proxy"
 
-# Store the cluster as an ecs-cli profile
-# ecs-cli configure --cluster moneteer-landing-cluster --region eu-west-1 --config-name moneteer-landing --default-launch-type FARGATE
-
-# Create the service using the prevoiusly created profile
-# ecs-cli compose --cluster-config moneteer-landing -f docker-compose-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-landing-service/9703d51fdf93d81e --container-name proxy --container-port 80
+# Create the service using the default cluster profile
+# ecs-cli compose -f docker-compose-landing-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-landing-service/9703d51fdf93d81e --container-name proxy --container-port 80
