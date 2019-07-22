@@ -4,10 +4,6 @@ services:
     image: "525140287988.dkr.ecr.eu-west-1.amazonaws.com/moneteer/landing/app:latest"
     ports:
       - "5000:5000"
-    environment:
-      - OpenIdConnectAuthority=https://identity.moneteer.com
-      - CorsAllowedOrigins=https://app.moneteer.com
-      - ASPNETCORE_ENVIRONMENT=Production
     logging:
       driver: "awslogs"
       options:
@@ -25,4 +21,8 @@ services:
         awslogs-group: "moneteer-landing"
         awslogs-stream-prefix: "proxy"
 
-# ecs-cli compose -f docker-compose-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-landing-service/9703d51fdf93d81e --container-name proxy --container-port 80
+# Store the cluster as an ecs-cli profile
+# ecs-cli configure --cluster moneteer-landing-cluster --region eu-west-1 --config-name moneteer-landing --default-launch-type FARGATE
+
+# Create the service using the prevoiusly created profile
+# ecs-cli compose --cluster-config moneteer-landing -f docker-compose-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-landing-service/9703d51fdf93d81e --container-name proxy --container-port 80

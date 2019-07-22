@@ -25,28 +25,26 @@ namespace Moneteer.Landing.V2.Helpers
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            //if (_hostingEnvironment.IsDevelopment())
-            //{
-            //    _logger.LogInformation(htmlMessage);
-            //}
-            //else
-            //{
+            if (_hostingEnvironment.IsDevelopment())
+            {
+                _logger.LogInformation(htmlMessage);
+            }
+            else
+            {
                 using (var client = new SmtpClient(_smtpConnectionInfo.Host, _smtpConnectionInfo.Port))
                 {
                     client.UseDefaultCredentials = false;
                     client.Credentials = new NetworkCredential(_smtpConnectionInfo.Username, _smtpConnectionInfo.Password);
                     client.EnableSsl = true;
 
-                    var message = new MailMessage("noreply@moneteer.com", email)
-                    {
-                        IsBodyHtml = true,
-                        Body = htmlMessage,
-                        Subject = subject
-                    };
+                    var message = new MailMessage("noreply@moneteer.com", email);
+                    message.IsBodyHtml = true;
+                    message.Body = htmlMessage;
+                    message.Subject = subject;
 
                     client.Send(message);
                 }
-            //}
+            }
             
             return Task.CompletedTask;
         }

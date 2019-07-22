@@ -13,16 +13,10 @@ task_definition:
           name: ConnectionStrings:Identity
         - value_from: MoneteerAppConnectionString
           name: ConnectionStrings:App
-        - value_from: MoneteerSmtpHost
-          name: SmtpHost
-        - value_from: MoneteerSmtpPort
-          name: SmtpPort
-        - value_from: MoneteerSmtpUsername
+        - value_from: /Moneteer/Landing/SmtpUsername
           name: SmtpUsername
-        - value_from: MoneteerSmtpPassword
+        - value_from: /Moneteer/Landing/SmtpPassword
           name: SmtpPassword
-        - value_from: MoneteerSmtpFromAddress
-          name: SmtpFromAddress
     proxy:
       essential: true
 run_params:
