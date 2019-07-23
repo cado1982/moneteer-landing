@@ -3,7 +3,49 @@
 @{
     ViewData["Title"] = "Register";
 }
-<form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+@inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper
+
+<div class="container my-5">
+    <form asp-route-returnUrl="@Model.ReturnUrl" method="post" novalidate>
+        <div class="row">
+            <input type="hidden" asp-for="ReturnUrl" />
+            <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
+                <h5 class="card-header">Register</h5>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label asp-for="Input.Email"></label>
+                        <input asp-for="Input.Email" class="form-control form-control-lg" placeholder="Enter your email" autofocus />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Password"></label>
+                        <input asp-for="Input.Password" class="form-control form-control-lg" placeholder="••••••••••" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.ConfirmPassword"></label>
+                        <input asp-for="Input.ConfirmPassword" class="form-control form-control-lg" placeholder="••••••••••" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                </div>
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="m-5 text-center">
+        <div>Already have an account?</div>
+        <div><a asp-controller="Account" asp-action="Login">Log in</a></div>
+    </div>
+</div>
+
+
+
+@*<form asp-route-returnUrl="@Model.ReturnUrl" method="post">
     <div class="container m-5">
         <div class="row">
 
@@ -38,7 +80,7 @@
 
         </div>
     </div>
-</form>
+</form>*@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

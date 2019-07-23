@@ -17,6 +17,7 @@ using Moneteer.Landing.V2.Helpers;
 using Moneteer.Identity.Domain;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Moneteer.Landing.Repositories;
+using Moneteer.Landing.Helpers;
 
 namespace Moneteer.Landing.V2
 {
@@ -114,10 +115,9 @@ namespace Moneteer.Landing.V2
                 FromAddress = Configuration["SmtpFromAddress"]
             });
 
-            services.AddMvc(/*options => 
-            {
-                //options.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().AddAuthenticationSchemes(OpenIdConnectDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build()));
-            }*/).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSingleton<IConfigurationHelper, ConfigurationHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

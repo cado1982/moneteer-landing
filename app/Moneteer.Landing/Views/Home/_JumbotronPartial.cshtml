@@ -1,5 +1,8 @@
 ﻿<div class="jumbotron">
     <h1 class="header-text-shadow">Introducing Moneteer</h1>
     <p class="lead">Get ready to budget smarter, regain control, and sleep soundly at night.</p>
-    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary btn-lg">Get Started</a>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-warning btn-lg">Get Started</a>
+    }
 </div>

@@ -30,8 +30,7 @@ namespace Moneteer.Landing.V2
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     var env = context.HostingEnvironment;
-                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                    config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: false, reloadOnChange: true);
                     config.AddEnvironmentVariables();
                 })
                 .UseStartup<Startup>()
