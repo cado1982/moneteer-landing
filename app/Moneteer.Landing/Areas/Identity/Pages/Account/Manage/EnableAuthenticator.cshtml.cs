@@ -148,7 +148,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("Moneteer.Landing.V2"),
+                _urlEncoder.Encode("Moneteer"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }

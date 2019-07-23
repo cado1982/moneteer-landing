@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Moneteer.Landing.V2.Models;
 using Moneteer.Landing.V2.ViewModels;
 
 namespace Moneteer.Landing.V2.Controllers
