@@ -8,7 +8,7 @@
 
 @if (showBanner)
 {
-    <nav id="cookieConsent" role="alert">
+    <nav id="cookieConsent" role="alert" class="fixed-bottom py-3 bg-primary text-light">
         <div class="container">
             @*<div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#cookieConsent .navbar-collapse">
@@ -19,13 +19,13 @@
                 </button>
                 <span class="navbar-brand"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></span>
             </div>*@
-            <div class="collapse navbar-collapse">
+            <div>
                 <p class="navbar-text">
                     Moneteer uses cookies stored on your device to improve its services. Click Accept to acknowledge that you agree to the use of cookies.
                 </p>
                 <div class="navbar-right">
-                    <a asp-controller="Home" asp-action="Privacy" class="btn btn-info navbar-btn">Learn More</a>
-                    <button type="button" class="btn btn-default navbar-btn" data-cookie-string="@cookieString">Accept</button>
+                    <a asp-controller="Home" asp-action="Privacy" class="btn btn-warning navbar-btn">Learn More</a>
+                    <button type="button" class="btn btn-default text-light navbar-btn" data-cookie-string="@cookieString">Accept</button>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
         (function () {
             document.querySelector("#cookieConsent button[data-cookie-string]").addEventListener("click", function (el) {
                 document.cookie = el.target.dataset.cookieString;
-                document.querySelector("#cookieConsent").classList.add("hidden");
+                document.querySelector("#cookieConsent").classList.add("d-none");
             }, false);
         })();
     </script>
