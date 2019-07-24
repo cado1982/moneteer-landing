@@ -31,6 +31,12 @@
                 "${workspaceFolder}/app/Moneteer.Landing/Moneteer.Landing.csproj"
             ],
             "problemMatcher": "$tsc"
+        },
+        {
+            "type": "npm",
+            "script": "gulp-watch",
+            "path": "app/Moneteer.Landing/",
+            "problemMatcher": []
         }
     ]
 }
