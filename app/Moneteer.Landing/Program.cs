@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Moneteer.Landing.V2
 {
@@ -14,7 +14,10 @@ namespace Moneteer.Landing.V2
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .UseSerilog()
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                })
                 .UseStartup<Startup>();
         }
     }
