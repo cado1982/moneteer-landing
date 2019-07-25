@@ -20,7 +20,6 @@ namespace Moneteer.Landing.V2
                 {
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                     logging.AddAWSProvider();
-                    logging.SetMinimumLevel(LogLevel.Debug);
                 })
                 .UseStartup<Startup>();
         }
