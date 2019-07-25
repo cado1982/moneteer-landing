@@ -7,10 +7,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "5000:5000"
+      - "5000"
   proxy:
     build:
-      context: nginx
+      context: nginx/dev
       dockerfile: Dockerfile
     ports:
       - "80:80"
