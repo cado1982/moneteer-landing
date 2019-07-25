@@ -151,7 +151,6 @@ namespace Moneteer.Landing.V2
                 app.UseExceptionHandler("/Home/Error");
             } 
 
-            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();

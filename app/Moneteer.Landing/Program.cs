@@ -18,8 +18,16 @@ namespace Moneteer.Landing.V2
             return WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((hostingContext, logging) =>
                 {
-                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                     logging.AddAWSProvider();
+
+                    if (hostingContext.HostingEnvironment.IsDevelopment())
+                    {
+                        logging.SetMinimumLevel(LogLevel.Debug);
+                    } 
+                    else 
+                    {
+                        logging.SetMinimumLevel(LogLevel.Information);
+                    }
                 })
                 .UseStartup<Startup>();
         }
