@@ -17,6 +17,7 @@ namespace Moneteer.Landing.V2
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddAWSProvider();
                 })
                 .UseStartup<Startup>();
         }
