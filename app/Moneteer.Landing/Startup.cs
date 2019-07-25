@@ -20,6 +20,7 @@ using Moneteer.Landing.Repositories;
 using Moneteer.Landing.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Logging.Console;
 
 namespace Moneteer.Landing.V2
 {
@@ -62,7 +63,7 @@ namespace Moneteer.Landing.V2
 
             if (!Environment.IsDevelopment())
             {
-                dataProtectionBuilder.PersistKeysToAWSSystemsManager("MoneteerDataProtection");
+                dataProtectionBuilder.PersistKeysToAWSSystemsManager("/Moneteer/DataProtection");
             }
 
             services.AddAntiforgery();
@@ -73,6 +74,7 @@ namespace Moneteer.Landing.V2
                     policy.WithOrigins(Configuration.GetValue("CorsAllowedOrigins", String.Empty)).AllowAnyHeader().AllowAnyMethod();
                 });
             });
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.Lockout.AllowedForNewUsers = false;
