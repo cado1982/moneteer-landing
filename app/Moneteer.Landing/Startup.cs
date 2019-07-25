@@ -25,15 +25,14 @@ namespace Moneteer.Landing.V2
 {
     public class Startup
     {
-        private IHostingEnvironment _env;
+        public IHostingEnvironment Environment { get; } 
+        public IConfiguration Configuration { get; }
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
-            _env = env;
+            Environment = environment;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -57,6 +56,14 @@ namespace Moneteer.Landing.V2
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+            var dataProtectionBuilder = services.AddDataProtection();
+
+            if (!Environment.IsDevelopment())
+            {
+                dataProtectionBuilder.PersistKeysToAWSSystemsManager("/Moneteer/DataProtection");
+            }
 
             services.AddAntiforgery();
             services.AddCors(options =>
@@ -92,7 +99,7 @@ namespace Moneteer.Landing.V2
 
                 options.RemoteAuthenticationTimeout = TimeSpan.FromHours(2);
                 options.ResponseType = "id_token";
-                options.RequireHttpsMetadata = !_env.IsDevelopment();
+                options.RequireHttpsMetadata = !Environment.IsDevelopment();
                 options.Scope.Clear();
                 options.Scope.Add("openid profile");
 
