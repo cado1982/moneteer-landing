@@ -62,7 +62,7 @@ namespace Moneteer.Landing.V2
 
             if (!Environment.IsDevelopment())
             {
-                dataProtectionBuilder.PersistKeysToAWSSystemsManager("/Moneteer/DataProtection");
+                dataProtectionBuilder.PersistKeysToAWSSystemsManager("MoneteerDataProtection");
             }
 
             services.AddAntiforgery();
