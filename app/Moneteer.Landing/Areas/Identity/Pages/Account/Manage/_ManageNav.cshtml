@@ -2,7 +2,7 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-<ul class="nav" role="tablist">
+<ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="nav-item">
         <a class="@ManageNavPages.IndexNavClass(ViewContext)" asp-page="./Index">Profile</a>
     </li>

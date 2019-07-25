@@ -2,16 +2,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
-    <div>
-        <h3>Change your account settings</h3>
-        <div class="row" style="margin-top: 20px;">
-            <div class="col-md-12">
-                <partial name="_ManageNav" />
-            </div>
-            <div class="col-md-12">
-                @RenderBody()
-            </div>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-12">
+            <partial name="_ManageNav" />
+        </div>
+        <div class="col-md-12 mt-4">
+            @RenderBody()
         </div>
     </div>
 </div>
