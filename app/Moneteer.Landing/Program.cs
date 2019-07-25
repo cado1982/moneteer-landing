@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore;
+﻿using AWS.Logger;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Moneteer.Landing.V2
@@ -18,6 +20,7 @@ namespace Moneteer.Landing.V2
                 {
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                     logging.AddAWSProvider();
+                    logging.SetMinimumLevel(LogLevel.Debug);
                 })
                 .UseStartup<Startup>();
         }

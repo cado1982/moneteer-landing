@@ -121,7 +121,7 @@ namespace Moneteer.Landing.V2
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
             });
@@ -142,7 +142,7 @@ namespace Moneteer.Landing.V2
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-            }
+            } 
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();

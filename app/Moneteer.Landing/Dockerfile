@@ -13,10 +13,14 @@ RUN apt-get update && \
 COPY Moneteer.Landing.csproj .
 RUN dotnet restore
 
-COPY . .
-
+COPY package.json .
 RUN npm install
+
+COPY Styles Styles/
+COPY gulpfile.js .
 RUN npm run gulp-build
+
+COPY . .
 
 RUN dotnet publish -c Release -o /publish --no-restore
 
