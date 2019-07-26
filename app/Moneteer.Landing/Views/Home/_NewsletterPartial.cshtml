@@ -2,12 +2,22 @@
     <section id="newsletter">
         <h3>We'd love to stay in touch</h3>
         <p>Enter your email address to join our mailing list.</p>
-        <form>
+        <form action="https://tinyletter.com/moneteer"
+              method="post" target="popupwindow"
+              onsubmit="window.open('https://tinyletter.com/moneteer', 'popupwindow', 'scrollbars=yes,width=800,height=600');return true">
             <div class="form-group">
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <input type="email" class="form-control" name="email" id="tlemail" aria-describedby="emailHelp" placeholder="Enter email">
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                <input type="hidden" value="1" name="embed" />
             </div>
-            <button type="submit" class="btn btn-warning">Submit</button>
+            <button type="submit" class="btn btn-warning">Subscribe</button>
         </form>
+
+        
+            @*<p><label for="tlemail">Enter your email address</label></p>
+            <p><input type="text" style="width:140px" name="email" id="tlemail" /></p><input type="hidden" value="1"
+                                                                                             name="embed" /><input type="submit" value="Subscribe" />
+            <p><a href="https://tinyletter.com" target="_blank">powered by TinyLetter</a></p>
+        </form>*@
     </section>
 </div>
