@@ -59,12 +59,8 @@ namespace Moneteer.Landing.V2
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-            var dataProtectionBuilder = services.AddDataProtection();
-
-            if (!Environment.IsDevelopment())
-            {
-                dataProtectionBuilder.PersistKeysToAWSSystemsManager("/Moneteer/DataProtection");
-            }
+            var dataProtectionBuilder = services.AddDataProtection()
+                                                .PersistKeysToAWSSystemsManager(Configuration["DataProtectionKeyParameterStorePrefix"]);
 
             services.AddAntiforgery();
             services.AddCors(options =>
