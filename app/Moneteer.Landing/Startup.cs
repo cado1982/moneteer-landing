@@ -21,6 +21,8 @@ using Moneteer.Landing.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Logging.Console;
+using Microsoft.AspNetCore.DataProtection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Moneteer.Landing.V2
 {
@@ -51,6 +53,7 @@ namespace Moneteer.Landing.V2
             services.AddTransient<IBudgetRepository, BudgetRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Identity")));
+            services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DataProtection")));
             services.AddDefaultIdentity<IdentityUser>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = true;
@@ -59,9 +62,19 @@ namespace Moneteer.Landing.V2
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-            var dataProtectionBuilder = services.AddDataProtection()
-                                                .PersistKeysToAWSSystemsManager(Configuration["DataProtectionKeyParameterStorePrefix"]);
-
+            // Data Protection - Provides storage and encryption for anti-forgery tokens
+            if (Environment.IsDevelopment())
+            {
+                services.AddDataProtection()
+                        .PersistKeysToDbContext<DataProtectionKeysContext>();
+            }
+            else 
+            {
+                services.AddDataProtection()
+                        .PersistKeysToDbContext<DataProtectionKeysContext>()
+                        .ProtectKeysWithCertificate(GetSigningCertificate());
+            }
+    
             services.AddAntiforgery();
             services.AddCors(options =>
             {
@@ -122,7 +135,7 @@ namespace Moneteer.Landing.V2
                 FromAddress = Configuration["SmtpFromAddress"]
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -154,6 +167,15 @@ namespace Moneteer.Landing.V2
             app.UseAuthentication();
 
             app.UseMvcWithDefaultRoute();
+        }
+
+        private X509Certificate2 GetSigningCertificate()
+        {
+            var cert = Configuration["TokenSigningCert"];
+            var secret = Configuration["TokenSigningCertSecret"];
+                
+            byte[] decodedPfxBytes = Convert.FromBase64String(cert);
+            return new X509Certificate2(decodedPfxBytes, secret);
         }
     }
 }
