@@ -104,7 +104,7 @@ namespace Moneteer.Landing.V2
             .AddCookie()
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
-                options.Authority = Configuration.GetValue<string>("OpenIdConnectAuthority");
+                options.Authority = Configuration["OpenIdConnectAuthority"];
 
                 options.ClientId = "moneteer-mvc";
 
