@@ -90,27 +90,27 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Moneteer - Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    var budget = new Budget
-                    {
-                        Available = 0,
-                        CurrencyCode = "USD",
-                        CurrencySymbolLocation = SymbolLocation.Before,
-                        DateFormat = "dd/MM/yyyy",
-                        DecimalPlaces = 2,
-                        DecimalSeparator = ".",
-                        ThousandsSeparator = ",",
-                        Name = "My Budget",
-                        UserId = new Guid(user.Id)
-                    };
+                    // var budget = new Budget
+                    // {
+                    //     Available = 0,
+                    //     CurrencyCode = "USD",
+                    //     CurrencySymbolLocation = SymbolLocation.Before,
+                    //     DateFormat = "dd/MM/yyyy",
+                    //     DecimalPlaces = 2,
+                    //     DecimalSeparator = ".",
+                    //     ThousandsSeparator = ",",
+                    //     Name = "My Budget",
+                    //     UserId = new Guid(user.Id)
+                    // };
 
-                    using (var conn = _connectionProvider.GetOpenConnection())
-                    using (var transaction = conn.BeginTransaction())
-                    {
-                        var budgetEntity = await _budgetRepository.Create(budget, conn);
-                        await _budgetRepository.CreateDefaultEnvelopes(budgetEntity.Id, conn);
+                    // using (var conn = _connectionProvider.GetOpenConnection())
+                    // using (var transaction = conn.BeginTransaction())
+                    // {
+                    //     var budgetEntity = await _budgetRepository.Create(budget, conn);
+                    //     await _budgetRepository.CreateDefaultEnvelopes(budgetEntity.Id, conn);
 
-                        transaction.Commit();
-                    }
+                    //     transaction.Commit();
+                    // }
 
                     return RedirectToPage("./RegisterCheckEmail");
                 }
