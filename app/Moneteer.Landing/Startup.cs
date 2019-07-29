@@ -80,7 +80,7 @@ namespace Moneteer.Landing.V2
             {
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins(Configuration.GetValue("CorsAllowedOrigins", String.Empty)).AllowAnyHeader().AllowAnyMethod();
+                    policy.WithOrigins(Configuration["AllowedCorsOrigins"]).AllowAnyHeader().AllowAnyMethod();
                 });
             });
 
