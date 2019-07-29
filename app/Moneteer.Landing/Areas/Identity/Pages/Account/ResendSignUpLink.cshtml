@@ -1,16 +1,16 @@
-﻿@page
-@model ForgotPasswordModel
+@page
+@model ResendSignUpLinkModel
 @{
-    ViewData["Title"] = "Forgot your password?";
+    ViewData["Title"] = "Resend email";
 }
+@inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper
 
 <div class="container my-5">
     <form method="post" novalidate>
         <div class="row">
             <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
-                <h5 class="card-header">Forgot Password</h5>
+                <h5 class="card-header">Resend sign up link</h5>
                 <div class="card-body">
-                    <p>Enter your email address and we'll send you instructions to reset your password.</p>
                     <div class="form-group">
                         <label asp-for="Input.Email"></label>
                         <input asp-for="Input.Email" class="form-control form-control-lg" placeholder="Enter your email" autofocus />
@@ -18,8 +18,9 @@
                     </div>
                     <div asp-validation-summary="All" class="text-danger"></div>
                 </div>
+
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Reset Password</button>
+                    <button type="submit" class="btn btn-primary">Resend link</button>
                 </div>
             </div>
         </div>
