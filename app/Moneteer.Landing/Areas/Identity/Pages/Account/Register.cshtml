@@ -5,7 +5,15 @@
 }
 @inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper
 
+
+
 <div class="container my-5">
+    <div class="row mb-3">
+        <div class="col-md-8 col-lg-6 offset-md-2 offset-lg-3 mb-3 alert alert-primary" role="alert">
+            Moneteer is still in development. You can still create an account and we'll let you know when the app is ready!
+        </div>
+    </div>
+    
     <form asp-route-returnUrl="@Model.ReturnUrl" method="post" novalidate>
         <div class="row">
             <input type="hidden" asp-for="ReturnUrl" />
