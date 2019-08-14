@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using System.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -11,22 +11,23 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Moneteer.Landing.Models;
 using Moneteer.Landing.Repositories;
+using Moneteer.Identity.Domain.Entities;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IBudgetRepository _budgetRepository;
         private readonly IConnectionProvider _connectionProvider;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             IBudgetRepository budgetRepository,
@@ -74,43 +75,12 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new User { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { userId = user.Id, code = code },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Moneteer - Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    // var budget = new Budget
-                    // {
-                    //     Available = 0,
-                    //     CurrencyCode = "USD",
-                    //     CurrencySymbolLocation = SymbolLocation.Before,
-                    //     DateFormat = "dd/MM/yyyy",
-                    //     DecimalPlaces = 2,
-                    //     DecimalSeparator = ".",
-                    //     ThousandsSeparator = ",",
-                    //     Name = "My Budget",
-                    //     UserId = new Guid(user.Id)
-                    // };
-
-                    // using (var conn = _connectionProvider.GetOpenConnection())
-                    // using (var transaction = conn.BeginTransaction())
-                    // {
-                    //     var budgetEntity = await _budgetRepository.Create(budget, conn);
-                    //     await _budgetRepository.CreateDefaultEnvelopes(budgetEntity.Id, conn);
-
-                    //     transaction.Commit();
-                    // }
+                    await CreateBudgetForNewUser(user);
+                    await SendEmailConfirmation(user);
 
                     return RedirectToPage("./RegisterCheckEmail");
                 }
@@ -119,10 +89,53 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private async Task CreateBudgetForNewUser(User user)
+        {
+            try
+            {
+                var budget = new Budget
+                {
+                    Available = 0,
+                    CurrencyCode = "USD",
+                    CurrencySymbolLocation = SymbolLocation.Before,
+                    DateFormat = "dd/MM/yyyy",
+                    DecimalPlaces = 2,
+                    DecimalSeparator = ".",
+                    ThousandsSeparator = ",",
+                    Name = "My Budget",
+                    UserId = user.Id
+                };
+
+                using (var conn = _connectionProvider.GetOpenConnection())
+                {
+                    var budgetEntity = await _budgetRepository.Create(budget, conn);
+                    await _budgetRepository.CreateDefaultEnvelopes(budgetEntity.Id, conn);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to create budget for user {user.Id}");
+            }
+        }
+
+        private async Task SendEmailConfirmation(User user)
+        {
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { userId = user.Id, code = code },
+                protocol: Request.Scheme);
+
+            await _emailSender.SendEmailAsync(Input.Email, "Moneteer - Confirm your email",
+                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
         }
     }
 }

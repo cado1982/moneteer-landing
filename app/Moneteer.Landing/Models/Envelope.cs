@@ -12,6 +12,6 @@ namespace Moneteer.Landing.Models
         public EnvelopeCategory EnvelopeCategory { get; set; }
         public bool IsHidden { get; set; }
         public bool IsDeleted { get; set; }
-        public decimal Balance { get; set; }
+        public decimal Assigned { get; set; }
     }
 }

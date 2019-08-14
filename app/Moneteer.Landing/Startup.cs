@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Moneteer.Landing.V2.Helpers;
 using Moneteer.Identity.Domain;
+using Moneteer.Identity.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Moneteer.Landing.Repositories;
 using Moneteer.Landing.Helpers;
@@ -47,19 +48,19 @@ namespace Moneteer.Landing.V2
                 options.ConsentCookie.Domain = Environment.IsDevelopment() ? "" : null;
             });
 
-            var appConnectionString = Configuration.GetConnectionString("App");
-            services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = Configuration.GetConnectionString("App") });
+            var moneteerConnectionString = Configuration.GetConnectionString("Moneteer");
+            services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = moneteerConnectionString });
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
             services.AddTransient<IBudgetRepository, BudgetRepository>();
 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Identity")));
-            services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DataProtection")));
-            services.AddDefaultIdentity<IdentityUser>(options =>
+            services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(moneteerConnectionString));
+            services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(moneteerConnectionString));
+            services.AddDefaultIdentity<User>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = true;
             })
                 .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<IdentityDbContext>();
 
 
             // Data Protection - Provides storage and encryption for anti-forgery tokens

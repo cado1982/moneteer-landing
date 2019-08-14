@@ -11,22 +11,23 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Moneteer.Landing.Models;
 using Moneteer.Landing.Repositories;
+using Moneteer.Identity.Domain.Entities;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ResendSignUpLinkModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IBudgetRepository _budgetRepository;
         private readonly IConnectionProvider _connectionProvider;
 
         public ResendSignUpLinkModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             IBudgetRepository budgetRepository,

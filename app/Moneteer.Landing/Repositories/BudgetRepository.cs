@@ -52,13 +52,13 @@ namespace Moneteer.Landing.Repositories
                 else
                 {
                     LogPostgresException(ex, "Error creating budget");
-                    throw new ApplicationException("Oops! Something went wrong. Please try again");
+                    throw new ApplicationException("Oops! Something went wrong. Please try again", ex);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating budget");
-                throw new ApplicationException("Oops! Something went wrong. Please try again");
+                throw new ApplicationException("Oops! Something went wrong. Please try again", ex);
             }
         }
 
@@ -86,12 +86,12 @@ namespace Moneteer.Landing.Repositories
             catch (PostgresException ex)
             {
                 LogPostgresException(ex, $"Error creating default envelopes for budget: {budgetId}");
-                throw new ApplicationException("Oops! Something went wrong. Please try again");
+                throw new ApplicationException("Oops! Something went wrong. Please try again", ex);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error creating default envelopes for budget: {budgetId}");
-                throw new ApplicationException("Oops! Something went wrong. Please try again");
+                throw new ApplicationException("Oops! Something went wrong. Please try again", ex);
             }
         }
 
@@ -102,11 +102,19 @@ namespace Moneteer.Landing.Repositories
             builder.AppendLine(message);
             builder.AppendLine(exception.Message);
             builder.AppendLine(exception.StackTrace);
-            builder.AppendLine(exception.Statement.SQL);
 
-            foreach (var parameter in exception.Statement.InputParameters)
+            if (exception.Statement != null)
             {
-                builder.AppendLine($"{parameter.ParameterName}: {parameter.Value}");
+                builder.AppendLine(exception.Statement.SQL);
+
+                if (exception.Statement.InputParameters != null)
+                {
+                    foreach (var parameter in exception.Statement.InputParameters)
+                    {
+                        builder.AppendLine($"{parameter.ParameterName}: {parameter.Value}");
+
+                    }
+                }
             }
 
             _logger.LogError(builder.ToString());

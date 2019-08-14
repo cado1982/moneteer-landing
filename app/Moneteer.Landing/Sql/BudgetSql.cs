@@ -9,7 +9,7 @@ namespace Moneteer.Landing.Sql
     {
         public static string Create = @"
             INSERT INTO 
-                budget (id, 
+                app.budget (id, 
                         name, 
                         user_id,
                         available,

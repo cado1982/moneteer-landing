@@ -1,4 +1,6 @@
-﻿<nav class="navbar navbar-toggleable-md navbar-expand-lg navbar-dark bg-dark">
+﻿@inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper;
+
+<nav class="navbar navbar-toggleable-md navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">
             <img height="50" src="~/images/logo/logo-full-inverted.png" />
@@ -11,12 +13,12 @@
 
 
             <ul class="navbar-nav mr-auto">
-                <!-- @if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item">
-                        <a class="btn btn-warning" href="https://localhost:4200">Launch App</a>
+                        <a class="btn btn-warning" href="@ConfigurationHelper.AppUri">Launch App</a>
                     </li>
-                } -->
+                }
             </ul>
 
 
