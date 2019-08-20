@@ -9,7 +9,6 @@ namespace Moneteer.Landing.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public decimal Available { get; set; }
         public string CurrencyCode { get; set; }
         public string ThousandsSeparator { get; set; }
         public string DecimalSeparator { get; set; }

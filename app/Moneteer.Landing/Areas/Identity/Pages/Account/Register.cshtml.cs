@@ -102,7 +102,6 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             {
                 var budget = new Budget
                 {
-                    Available = 0,
                     CurrencyCode = "USD",
                     CurrencySymbolLocation = SymbolLocation.Before,
                     DateFormat = "dd/MM/yyyy",
