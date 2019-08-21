@@ -172,7 +172,6 @@ namespace Moneteer.Landing.Repositories
 
             result.Envelopes.Add(new Envelope { Id = Guid.NewGuid(), EnvelopeCategory = debt, Name = "Car Payment" });
             result.Envelopes.Add(new Envelope { Id = Guid.NewGuid(), EnvelopeCategory = debt, Name = "Student Loan Payment" });
-            result.Envelopes.Add(new Envelope { Id = Guid.NewGuid(), EnvelopeCategory = debt, Name = "Pre Moneteer Debt" });
 
             result.Envelopes.Add(new Envelope { Id = Guid.NewGuid(), EnvelopeCategory = giving, Name = "Tithing" });
             result.Envelopes.Add(new Envelope { Id = Guid.NewGuid(), EnvelopeCategory = giving, Name = "Charitable" });
