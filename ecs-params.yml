@@ -9,12 +9,8 @@ task_definition:
     app:
       essential: true
       secrets:
-        - value_from: MoneteerIdentityConnectionString
-          name: ConnectionStrings:Identity
-        - value_from: MoneteerAppConnectionString
-          name: ConnectionStrings:App
-        - value_from: MoneteerDataProtectionConnectionString
-          name: ConnectionStrings:DataProtection
+        - value_from: /Moneteer/ConnectionString
+          name: ConnectionStrings:Moneteer
         - value_from: /Moneteer/Landing/SmtpUsername
           name: SmtpUsername
         - value_from: /Moneteer/Landing/SmtpPassword
