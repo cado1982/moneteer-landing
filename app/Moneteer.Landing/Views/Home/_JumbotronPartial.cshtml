@@ -1,8 +1,21 @@
-﻿<div class="jumbotron">
-    <h1 class="header-text-shadow">Introducing Moneteer</h1>
-    <p class="lead">Get ready to budget smarter, regain control, and sleep soundly at night.</p>
-    @if (!User.Identity.IsAuthenticated)
-    {
-        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-warning btn-lg">Get Started</a>
-    }
+﻿@inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper;
+
+<div class="jumbotron container-fluid px-md-7 py-5">
+    <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-left">
+            <h1 class="header-text-shadow">Introducing Moneteer</h1>
+            <p class="lead">Get ready to budget smarter, regain control, and sleep soundly at night.</p>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-warning btn-lg">Get Started</a>
+            }
+            else 
+            {
+                <a class="btn btn-warning btn-lg" href="@ConfigurationHelper.AppUri">Launch App</a>
+            }
+        </div>
+        <div class="col-md-6 mt-5 mt-md-0">
+            <img class="w-100 h-auto" src="images/hero-laptop.png" />
+        </div>
+    </div>
 </div>

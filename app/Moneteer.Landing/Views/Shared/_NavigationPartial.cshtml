@@ -12,11 +12,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
 
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav mr-lg-auto">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <li class="nav-item">
-                        <a class="btn btn-warning" href="@ConfigurationHelper.AppUri">Launch App</a>
+                    <li class="nav-item mr-lg-4 mt-2 mt-lg-0">
+                        <a class="nav-link btn btn-warning" href="@ConfigurationHelper.AppUri">Launch App</a>
                     </li>
                 }
             </ul>
@@ -29,7 +29,7 @@
                         <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
                     </li>
                     <li class="nav-item mt-2 mt-lg-0">
-                        <a class="nav-link" asp-controller="Account" asp-action="Logout">Log out</a>
+                        <a class="nav-link " asp-controller="Account" asp-action="Logout">Log out</a>
                     </li>
                 }
                 else
@@ -38,7 +38,7 @@
                         <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register">Register</a>
                     </li>
 
-                    <li class="nav-item text-center mt-2 mt-lg-0">
+                    <li class="nav-item mt-2 mt-lg-0">
                         <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
                     </li>
                 }
