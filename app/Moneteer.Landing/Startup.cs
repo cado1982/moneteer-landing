@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Moneteer.Landing.V2.Helpers;
 using Moneteer.Identity.Domain;
@@ -21,9 +19,9 @@ using Moneteer.Landing.Repositories;
 using Moneteer.Landing.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Logging.Console;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Cryptography.X509Certificates;
+using Serilog;
 
 namespace Moneteer.Landing.V2
 {
@@ -115,9 +113,10 @@ namespace Moneteer.Landing.V2
                 options.Authority = Configuration["OpenIdConnectAuthority"];
 
                 options.ClientId = "moneteer-mvc";
+                options.ClientSecret = "secret";
 
                 options.RemoteAuthenticationTimeout = TimeSpan.FromHours(2);
-                options.ResponseType = "id_token";
+                options.ResponseType = "code id_token";
                 options.RequireHttpsMetadata = !Environment.IsDevelopment();
                 options.Scope.Clear();
                 options.Scope.Add("openid profile");
@@ -161,6 +160,7 @@ namespace Moneteer.Landing.V2
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseSerilogRequestLogging();
             app.UseForwardedHeaders();
 
             if (env.IsDevelopment())
