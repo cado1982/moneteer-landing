@@ -20,5 +20,10 @@ namespace Moneteer.Landing.Helpers
         {
             get { return _configuration["AppUri"]; }
         }
+
+        public string ClientSecret
+        {
+            get { return _configuration["ClientSecret"]; }
+        }
     }
 }

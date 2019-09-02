@@ -9,5 +9,6 @@ namespace Moneteer.Landing.Helpers
     {
         string IdentityUri { get; }
         string AppUri { get; }
+        string ClientSecret { get; }
     }
 }

@@ -105,7 +105,6 @@ namespace Moneteer.Landing.V2
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                
             })
             .AddCookie()
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
@@ -113,7 +112,7 @@ namespace Moneteer.Landing.V2
                 options.Authority = Configuration["OpenIdConnectAuthority"];
 
                 options.ClientId = "moneteer-mvc";
-                options.ClientSecret = "secret";
+                options.ClientSecret = Configuration["ClientSecret"];
 
                 options.RemoteAuthenticationTimeout = TimeSpan.FromHours(2);
                 options.ResponseType = "code id_token";
