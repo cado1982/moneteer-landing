@@ -26,5 +26,27 @@ namespace Moneteer.Landing.Helpers
         {
             get { return Int32.Parse(_configuration["TrialNumberOfDays"]); }
         }
+
+        public StripeConfiguration Stripe
+        {
+            get
+            {
+                return new StripeConfiguration
+                {
+                    SubscriptionSuccessUrl = _configuration["Stripe:SubscriptionSuccessUrl"],
+                    SubscriptionCancelledUrl = _configuration["Stripe:SubscriptionCancelledUrl"],
+                    SubscriptionPlanId = _configuration["Stripe:SubscriptionPlanId"],
+                    PublicKey = _configuration["Stripe:PublicKey"]
+                };
+            }
+        }
+    }
+
+    public class StripeConfiguration
+    {
+        public string SubscriptionSuccessUrl { get; set; }
+        public string SubscriptionCancelledUrl { get; set; }
+        public string SubscriptionPlanId { get; set; }
+        public string PublicKey { get; set; }
     }
 }

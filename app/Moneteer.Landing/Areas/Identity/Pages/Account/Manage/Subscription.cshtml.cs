@@ -32,6 +32,8 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 
         public DateTime TrialExpiry { get; set; }
 
+        public string Email { get; set; }
+
         public DateTime? SubscriptionExpiry { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
@@ -41,6 +43,8 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+
+            Email = await _userManager.GetEmailAsync(user);
 
             TrialExpiry = user.TrialExpiry;
             SubscriptionExpiry = user.SubscriptionExpiry;
