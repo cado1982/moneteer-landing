@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using Moneteer.Landing.Models;
 using Moneteer.Landing.Repositories;
 using Moneteer.Identity.Domain.Entities;
+using Moneteer.Landing.Helpers;
+using Moneteer.Landing.Extensions;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 {
@@ -24,6 +26,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly IBudgetRepository _budgetRepository;
         private readonly IConnectionProvider _connectionProvider;
+        private readonly IConfigurationHelper _configurationHelper;
 
         public RegisterModel(
             UserManager<User> userManager,
@@ -31,7 +34,8 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             IBudgetRepository budgetRepository,
-            IConnectionProvider connectionProvider)
+            IConnectionProvider connectionProvider,
+            IConfigurationHelper configurationHelper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -39,6 +43,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _budgetRepository = budgetRepository;
             _connectionProvider = connectionProvider;
+            _configurationHelper = configurationHelper;
         }
 
         [BindProperty]
@@ -75,8 +80,16 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email };
+                var user = new User 
+                { 
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    TrialExpiry = DateTime.UtcNow.AddDays(_configurationHelper.TrialNumberOfDays).EndOfDay(),
+                    SubscriptionExpiry = null,
+                    StripeId = null
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
                     await CreateBudgetForNewUser(user);

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Moneteer.Landing.Helpers
 {
@@ -21,9 +22,9 @@ namespace Moneteer.Landing.Helpers
             get { return _configuration["AppUri"]; }
         }
 
-        public string ClientSecret
+        public int TrialNumberOfDays
         {
-            get { return _configuration["ClientSecret"]; }
+            get { return Int32.Parse(_configuration["TrialNumberOfDays"]); }
         }
     }
 }

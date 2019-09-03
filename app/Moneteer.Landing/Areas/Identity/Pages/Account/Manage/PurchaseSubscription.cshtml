@@ -1,0 +1,60 @@
+﻿@page
+@model PurchaseSubscriptionModel
+@{
+    ViewData["Title"] = "Subscription";
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage"></partial>
+<section class="py-3 py-md-5">
+    <div class="container-fluid">
+        <div class="row justify-content-around">
+            <div class="card shadow-lg rounded col-md-4 mb-5 mb-md-0 text-center">
+                <div class="card-header">
+                    Monthly
+                </div>
+                <div class="card-body">
+<div class="cost mt-3">
+                            <span class="cost-symbol">$</span>
+                            <span class="cost-value">2.99</span>
+                            <span class="cost-duration">/ month</span>
+                        </div>
+                        <a class="btn btn-primary my-4" href="#">Purchase Monthly Subscription</a>
+                        
+                </div>
+                <div class="card-footer text-left text-muted">
+<ul>
+                            <li>Subscription billed monthly</li>
+                            <li>Cancel any time</li>
+                        </ul>
+                </div>
+                
+
+            </div>
+            <div class="card rounded col-md-4 mb-5 mb-md-0 text-center">
+
+                    <h3 class="price-header">Yearly</h3>
+                    <div class="price-description">
+                        <div class="cost mt-3">
+                            <span class="cost-symbol">$</span>
+                            <span class="cost-value">2.49</span>
+                            <span class="cost-duration">/ month</span>
+
+                        </div>
+                        <a class="btn btn-primary my-4" href="#">Purchase Yearly Subscription</a>
+                        <ul>
+                            <li>Subscription billed yearly ($29.88 per year)</li>
+                            <li>Cancel any time</li>
+                        </ul>
+                    </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

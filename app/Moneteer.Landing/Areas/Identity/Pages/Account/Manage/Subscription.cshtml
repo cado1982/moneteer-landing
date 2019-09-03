@@ -1,0 +1,48 @@
+﻿@page
+@model SubscriptionModel
+@{
+    ViewData["Title"] = "Subscription";
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage"></partial>
+<div class="row">
+    <div class="col-md-6">
+        @{
+            if (Model.TrialExpiry > DateTime.UtcNow && Model.SubscriptionExpiry == null)
+            {
+                <div>
+                    Your 30 day trial expires on @Model.TrialExpiry.ToShortDateString().
+                </div>
+                <a asp-page="PurchaseSubscription" class="mt-3 btn btn-primary">
+                    Purchase Subscription
+                </a>
+            } 
+            else if (Model.SubscriptionExpiry != null && Model.SubscriptionExpiry > DateTime.UtcNow)
+            {
+                <div>
+                    Your current subscription is due for renewal on @Model.SubscriptionExpiry!.ToShortDateString().
+                </div>
+                <a asp-page="CancelSubscription" class="mt-3 btn btn-danger">
+                    Cancel Subscription
+                </a>
+                <a asp-page="ChangeSubscription" class="mt-3 btn btn-primary">
+                    Change Subscription
+                </a>
+            } 
+            else
+            {
+                <div>
+                    You do not currently have a valid subscription.
+                </div>
+                <a asp-page="PurchaseSubscription" class="mt-3 btn btn-primary">
+                    Purchase Subscription
+                </a>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
