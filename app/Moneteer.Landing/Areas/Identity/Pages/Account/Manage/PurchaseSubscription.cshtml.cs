@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Domain.Entities;
+using Stripe;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 {
@@ -38,6 +39,15 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+
+            var service = new PaymentIntentService();
+            var options = new PaymentIntentCreateOptions
+            {
+                Amount = 299,
+                Currency = "usd",
+            };
+            var intent = service.Create(options);
+            ViewData["ClientSecret"] = intent.ClientSecret;
 
             TrialExpiry = user.TrialExpiry;
             SubscriptionExpiry = user.SubscriptionExpiry;
