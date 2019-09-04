@@ -8,7 +8,7 @@ var notify = require("gulp-notify");
 
 gulp.task("scripts", function () {
     return gulp.src([
-        'node_modules/jquery/dist/jquery.slim.min.js',
+        'node_modules/jquery/dist/jquery.min.js',
         'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
         'node_modules/qrcodejs/qrcode.min.js'
     ])

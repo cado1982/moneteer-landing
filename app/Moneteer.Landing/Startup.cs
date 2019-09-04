@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.DataProtection;
 using System.Security.Cryptography.X509Certificates;
 using Serilog;
 using Stripe;
+using Moneteer.Landing.Managers;
 
 namespace Moneteer.Landing.V2
 {
@@ -53,6 +54,8 @@ namespace Moneteer.Landing.V2
             services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = moneteerConnectionString });
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
             services.AddTransient<IBudgetRepository, BudgetRepository>();
+            services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+            services.AddTransient<ISubscriptionManager, SubscriptionManager>();
 
             services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(moneteerConnectionString));
             services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(moneteerConnectionString));

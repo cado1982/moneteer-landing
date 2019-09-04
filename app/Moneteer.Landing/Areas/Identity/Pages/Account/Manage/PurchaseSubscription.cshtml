@@ -1,24 +1,151 @@
 ﻿@page
 @model PurchaseSubscriptionModel
 @{
-    ViewData["Title"] = "Subscription";
+    ViewData["Title"] = "Purchase Subscription";
 }
+@inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper
 
-<h4>@ViewData["Title"]</h4>
 <partial name="_StatusMessage" model="Model.StatusMessage"></partial>
 <section class="py-3 py-md-5">
     <div class="container-fluid">
-        <div id="card-element"></div>
-        <button id="card-button" class="btn btn-primary" data-secret="@ViewData["ClientSecret"]">Submit Payment</button>
+        <form id="subscription-form" method="post" novalidate>
+            <div class="row">
+                <div class="card shadow-lg rounded col-md-10 col-lg-8 offset-md-1 offset-lg-2 p-0">
+                    <h5 class="card-header">Purchase Subscription</h5>
+                    <div class="card-body">
+                        <div class="text-center mb-5 bg-primary text-light py-4 rounded">
+                            <div class="price-description">
+                                <div class="cost">
+                                    <span class="cost-symbol">$</span>
+                                    <span class="cost-value">2.99</span>
+                                    <span class="cost-duration">/ month</span>
+                                </div>
+                                <ul>
+                                    <li>Subscription billed monthly</li>
+                                    <li>Cancel any time</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="Input.FirstName"></label>
+                                <input asp-for="Input.FirstName" id="first-name" class="form-control form-control-lg" placeholder="Jane" autofocus />
+                                <span asp-validation-for="Input.FirstName" class="invalid-feedback"></span>
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Input.LastName"></label>
+                                <input asp-for="Input.LastName" id="last-name" class="form-control form-control-lg" placeholder="Doe" />
+                                <span asp-validation-for="Input.LastName" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Input.AddressLine1"></label>
+                            <input asp-for="Input.AddressLine1" id="address-line-1" class="form-control form-control-lg" placeholder="77 The Plaza" />
+                            <span asp-validation-for="Input.AddressLine1" class="invalid-feedback"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.AddressLine2"></label>
+                            <input asp-for="Input.AddressLine2" id="address-line-2" class="form-control form-control-lg" placeholder="" />
+                            <span asp-validation-for="Input.AddressLine2" class="invalid-feedback"></span>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="Input.City"></label>
+                                <input asp-for="Input.City" id="address-city" class="form-control form-control-lg" placeholder="" />
+                                <span asp-validation-for="Input.City" class="invalid-feedback"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Input.State"></label>
+                                <input asp-for="Input.State" id="address-state" class="form-control form-control-lg" placeholder="" />
+                                <span asp-validation-for="Input.State" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="Input.CountryCode">Country</label>
+                                <select id="address-country" class="form-control form-control-lg" asp-for="Input.CountryCode" asp-items="Model.Countries"></select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label asp-for="Input.Zip"></label>
+                                <input asp-for="Input.Zip" id="address-zip" class="form-control form-control-lg" placeholder="" />
+                                <span asp-validation-for="Input.Zip" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Card</label>
+                            <div id="card-element" class="form-control form-control-lg"></div>
+                        </div>
+
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div id="error-message" class="text-danger"></div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button type="submit" id="card-button" class="btn btn-primary" data-secret="@ViewData["ClientSecret"]">Purchase Subscription</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        const stripe = Stripe('pk_test_PB9HLKKLyGkmSISREQMW4WmZ');
-        const elements = stripe.elements();
-        var cardElement = elements.create('card');
-        cardElement.mount('#card-element');
+
+
+
+        $(function () {
+            const stripe = Stripe('@ConfigurationHelper.Stripe.PublicKey');
+            const elements = stripe.elements();
+            var cardElement = elements.create('card');
+
+            cardElement.mount('#card-element');
+
+            $('#subscription-form').submit(function (e) {
+                e.preventDefault();
+
+                var firstName = document.getElementById('first-name').value;
+                var lastName = document.getElementById('last-name').value;
+                var addressLine1 = document.getElementById('address-line-1').value;
+                var addressLine2 = document.getElementById('address-line-2').value;
+                var city = document.getElementById('address-city').value;
+                var state = document.getElementById('address-state').value;
+                var zip = document.getElementById('address-zip').value;
+                var country = document.getElementById('address-country').value;
+
+                stripe.createToken(cardElement, {
+                    name: firstName + ' ' + lastName,
+                    address_line1: addressLine1,
+                    address_line2: addressLine2,
+                    address_city: city,
+                    address_state: state,
+                    address_zip: zip,
+                    address_country: country
+                }
+                ).then(function (result) {
+                    if (result.error) {
+                        var errorMessage = document.getElementById('error-message');
+                        errorMessage.innerText = result.error.message;
+                    } else {
+                        var formAction = $('#subscription-form').attr('action');
+                        var formData = $('#subscription-form').serialize()
+
+                        formData = formData + '&Input.StripeToken=' + result.token.id;
+
+                        $.post(formAction, formData, function (result) {
+                            
+                        }) 
+                    }
+                });
+            });
+        })
+        
     </script>
 }
+

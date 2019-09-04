@@ -34,6 +34,8 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 
         public string Email { get; set; }
 
+        public string UserId { get; set; }
+
         public DateTime? SubscriptionExpiry { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
@@ -45,6 +47,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
             }
 
             Email = await _userManager.GetEmailAsync(user);
+            UserId = user.Id.ToString();
 
             TrialExpiry = user.TrialExpiry;
             SubscriptionExpiry = user.SubscriptionExpiry;

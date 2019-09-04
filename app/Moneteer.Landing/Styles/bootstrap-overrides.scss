@@ -34,3 +34,7 @@ body > .container-fluid {
 nav.bg-dark {
     background-color: $brand-dark-color !important;
 }
+
+.input-validation-error, .field-validation-error {
+    @extend .is-invalid;
+}

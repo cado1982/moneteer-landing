@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
@@ -12,13 +10,10 @@ using Npgsql;
 
 namespace Moneteer.Landing.Repositories
 {
-    public class BudgetRepository : IBudgetRepository
+    public class BudgetRepository : BaseRepository<BudgetRepository>, IBudgetRepository
     {
-        private readonly ILogger<BudgetRepository> _logger;
-
-        public BudgetRepository(ILogger<BudgetRepository> logger)
+        public BudgetRepository(ILogger<BudgetRepository> logger): base(logger)
         {
-            _logger = logger;
         }
 
         public async Task<Budget> Create(Budget budget, IDbConnection connection)
@@ -57,7 +52,7 @@ namespace Moneteer.Landing.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating budget");
+                Logger.LogError(ex, "Error creating budget");
                 throw new ApplicationException("Oops! Something went wrong. Please try again", ex);
             }
         }
@@ -90,36 +85,11 @@ namespace Moneteer.Landing.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error creating default envelopes for budget: {budgetId}");
+                Logger.LogError(ex, $"Error creating default envelopes for budget: {budgetId}");
                 throw new ApplicationException("Oops! Something went wrong. Please try again", ex);
             }
         }
-
-        private void LogPostgresException(PostgresException exception, string message)
-        {
-            var builder = new StringBuilder();
-
-            builder.AppendLine(message);
-            builder.AppendLine(exception.Message);
-            builder.AppendLine(exception.StackTrace);
-
-            if (exception.Statement != null)
-            {
-                builder.AppendLine(exception.Statement.SQL);
-
-                if (exception.Statement.InputParameters != null)
-                {
-                    foreach (var parameter in exception.Statement.InputParameters)
-                    {
-                        builder.AppendLine($"{parameter.ParameterName}: {parameter.Value}");
-
-                    }
-                }
-            }
-
-            _logger.LogError(builder.ToString());
-        }
-
+        
         private BudgetEnvelopes GenerateDefaultEnvelopes(Guid budgetId)
         {
             var result = new BudgetEnvelopes

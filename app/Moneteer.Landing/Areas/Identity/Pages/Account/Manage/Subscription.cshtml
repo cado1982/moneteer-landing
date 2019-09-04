@@ -16,7 +16,7 @@
                     Your 30 day trial expires on <strong>@Model.TrialExpiry.ToShortDateString()</strong>.
                 </div>
                 <div class="mt-3">Purchase a subscription for $2.99 per month to continue using the app once your trial expires.</div>
-                <button id="checkout-button-plan_CwPSFLsly7IJnB" role="link" class="mt-3 btn btn-primary">
+                <button class="mt-3 btn btn-primary checkout-button">
                     Purchase Subscription
                 </button>
             }
@@ -34,10 +34,11 @@
                 <div>
                     You do not currently have a valid subscription.
                 </div>
-                <button id="checkout-button-plan_CwPSFLsly7IJnB" role="link" class="mt-3 btn btn-primary">
+                <button class="mt-3 btn btn-primary checkout-button">
                     Purchase Subscription
-                </button>
+                </button>                
             }
+
             <div id="error-message"></div>
         }
     </div>
@@ -46,32 +47,24 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-          var stripe = Stripe('@Configuration.Stripe.PublicKey');
+        $()
+        var stripe = Stripe('@Configuration.Stripe.PublicKey');
 
-          var checkoutButton = document.getElementById('checkout-button-plan_CwPSFLsly7IJnB');
-          checkoutButton.addEventListener('click', function () {
-                // When the customer clicks on the button, redirect
-                // them to Checkout.
+        var checkoutButtons = $('.checkout-button');
+        
+        checkoutButtons.each(function () {
+            $(this).click(function () {
                 stripe.redirectToCheckout({
-                      items: [{plan: '@Configuration.Stripe.SubscriptionPlanId', quantity: 1}],
-
-                      // Do not rely on the redirect to the successUrl for fulfilling
-                      // purchases, customers may not always reach the success_url after
-                      // a successful payment.
-                      // Instead use one of the strategies described in
-                      // https://stripe.com/docs/payments/checkout/fulfillment
-                      successUrl: '@Configuration.Stripe.SubscriptionSuccessUrl',
-                        cancelUrl: '@Configuration.Stripe.SubscriptionCancelledUrl',
-                      customerEmail: '@Model.Email'
-                })
-                .then(function (result) {
-                      if (result.error) {
-                        // If `redirectToCheckout` fails due to a browser or network
-                        // error, display the localized error message to your customer.
-                        var displayError = document.getElementById('error-message');
-                        displayError.textContent = result.error.message;
-                      }
+                    items: [{
+                        plan: '@Configuration.Stripe.SubscriptionPlanId',
+                        quantity: 1
+                    }],
+                    clientReferenceId: '@Model.UserId',
+                    customerEmail: '@Model.Email',
+                    successUrl: '@Configuration.Stripe.SubscriptionSuccessUrl',
+                    cancelUrl: '@Configuration.Stripe.SubscriptionCancelledUrl'
                 });
-          });
+            })
+        });
     </script>
 }
