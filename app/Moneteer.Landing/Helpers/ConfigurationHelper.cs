@@ -36,7 +36,8 @@ namespace Moneteer.Landing.Helpers
                     SubscriptionSuccessUrl = _configuration["Stripe:SubscriptionSuccessUrl"],
                     SubscriptionCancelledUrl = _configuration["Stripe:SubscriptionCancelledUrl"],
                     SubscriptionPlanId = _configuration["Stripe:SubscriptionPlanId"],
-                    PublicKey = _configuration["Stripe:PublicKey"]
+                    PublicKey = _configuration["Stripe:PublicKey"],
+                    WebhookSigningKey = _configuration["Stripe:WebhookSigningKey"]
                 };
             }
         }
@@ -48,5 +49,6 @@ namespace Moneteer.Landing.Helpers
         public string SubscriptionCancelledUrl { get; set; }
         public string SubscriptionPlanId { get; set; }
         public string PublicKey { get; set; }
+        public string WebhookSigningKey { get; set; }
     }
 }

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Landing.Helpers;
-using Moneteer.Landing.Models;
 using Moneteer.Landing.Repositories;
 using Stripe;
+using Subscription = Moneteer.Landing.Models.Subscription;
 
 namespace Moneteer.Landing.Managers
 {
@@ -30,55 +30,33 @@ namespace Moneteer.Landing.Managers
             _userManager = userManager;
         }
 
-        public async Task<Customer> CreateStripeCustomer(Guid moneteerUserId, CustomerCreateOptions options)
+        public async Task<string> CreateStripeCustomer(User user)
         {
             using (var conn = _connectionProvider.GetOpenConnection())
             {
+                var email = await _userManager.GetEmailAsync(user);
+
                 var stripeCustomerService = new CustomerService();
 
-                options.Metadata = new Dictionary<string, string>
+                var options = new CustomerCreateOptions
                 {
-                    { "MoneteerUserId", moneteerUserId.ToString() }
+                    Metadata = new Dictionary<string, string>
+                    {
+                        { "MoneteerUserId", user.Id.ToString() }
+                    },
+                    Email = email
                 };
 
                 var customer = await stripeCustomerService.CreateAsync(options);
 
-                await _subscriptionRepository.SetStripeId(moneteerUserId, customer.Id, conn);
+                await _subscriptionRepository.SetStripeId(user.Id, customer.Id, conn);
 
-                return customer;
+                return customer.Id;
             }
-        }
-
-        public async Task CreateSubscription(string stripeCustomerId)
-        {
-            var items = new List<SubscriptionItemOption>
-            {
-                new SubscriptionItemOption
-                {
-                    PlanId = _configurationHelper.Stripe.SubscriptionPlanId
-                }
-            };
-
-            var options = new SubscriptionCreateOptions
-            {
-                CustomerId = stripeCustomerId,
-                Items = items
-            };
-            options.AddExpand("latest_invoice.payment_intent");
-
-            var service = new SubscriptionService();
-            Subscription subscription = await service.CreateAsync(options);
         }
 
         public async Task<string> GetStripeCustomerId(Guid moneteerUserId)
         {
-            //var service = new CountrySpecService();
-            //var options = new CountrySpecListOptions
-            //{
-            //    Limit = 100,
-            //};
-            //var countrySpecs = service.List(options);
-
             using (var conn = _connectionProvider.GetOpenConnection())
             {
                 var stripeId = await _subscriptionRepository.GetStripeId(moneteerUserId, conn);
@@ -87,11 +65,59 @@ namespace Moneteer.Landing.Managers
             }
         }
 
-        public async Task<bool> IsStripeCustomer(Guid moneteerUserId)
+        public async Task<Moneteer.Landing.Models.Subscription> GetSubscriptionByUser(string customerId)
         {
-            var stripeCustomerId = await GetStripeCustomerId(moneteerUserId);
+            if (String.IsNullOrWhiteSpace(customerId)) return null;
 
-            return !String.IsNullOrWhiteSpace(stripeCustomerId);
+            var service = new SubscriptionService();
+            var subscription = (await service.ListAsync(new SubscriptionListOptions
+            {
+                CustomerId = customerId,
+                Limit = 5
+            })).FirstOrDefault();
+
+            if (subscription == null) return null;
+
+            var returnValue = new  Moneteer.Landing.Models.Subscription
+            {
+                Expiry = subscription.CurrentPeriodEnd,
+                Id = subscription.Id,
+                Status = subscription.Status
+            };
+
+            return returnValue;
+        }
+
+        public async Task UpdateSubscriptionExpiry(string customerId, DateTime newExpiry)
+        {
+            if (String.IsNullOrWhiteSpace(customerId)) throw new ArgumentException("Customer id is empty");
+
+            using (var conn = _connectionProvider.GetOpenConnection())
+            {
+                await _subscriptionRepository.UpdateSubscriptionExpiry(customerId, newExpiry, conn);
+            }
+        }
+
+        public async Task CancelSubscription(string subscriptionId)
+        {
+            var service = new SubscriptionService();
+
+            await service.CancelAsync(subscriptionId, new SubscriptionCancelOptions
+            {
+                InvoiceNow = false,
+                Prorate = false
+            });
+        }
+
+        public async Task UpdateSubscriptionStatus(string customerId, string newStatus)
+        {
+            if (String.IsNullOrWhiteSpace(customerId)) throw new ArgumentException("Customer id is empty");
+
+            using (var conn = _connectionProvider.GetOpenConnection())
+            {
+                await _subscriptionRepository.UpdateSubscriptionStatus(customerId, newStatus, conn);
+            }
+            
         }
     }
 }

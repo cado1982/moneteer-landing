@@ -30,19 +30,12 @@ namespace Moneteer.Landing.Repositories
             }
             catch (PostgresException ex)
             {
-                if (ex.SqlState == PostgresErrorCodes.UniqueViolation)
-                {
-                    throw new ApplicationException("Budget already exists");
-                }
-                else
-                {
-                    LogPostgresException(ex, $"Error getting stripe id for user {userId}");
-                    throw;
-                }
+                LogPostgresException(ex, $"Error getting stripe id for user {userId}");
+                throw;
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, "Error creating budget");
+                Logger.LogError(ex, $"Error getting stripe id for user {userId}");
                 throw;
             }
         }
@@ -63,19 +56,88 @@ namespace Moneteer.Landing.Repositories
             }
             catch (PostgresException ex)
             {
-                if (ex.SqlState == PostgresErrorCodes.UniqueViolation)
-                {
-                    throw new ApplicationException("Budget already exists");
-                }
-                else
-                {
-                    LogPostgresException(ex, $"Error getting stripe id for user {userId}");
-                    throw;
-                }
+                LogPostgresException(ex, $"Error setting stripe id for user {userId}");
+                throw;
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, "Error creating budget");
+                Logger.LogError(ex, $"Error setting stripe id for user {userId}");
+                throw;
+            }
+        }
+
+        public async Task<string> GetUserIdFromStripeCustomerId(string stripeId, IDbConnection connection)
+        {
+            if (String.IsNullOrWhiteSpace(stripeId)) throw new ArgumentException("stripeId must be provided");
+
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@StripeId", stripeId);
+
+                var userId = await connection.ExecuteScalarAsync<string>(SubscriptionSql.GetUserId, parameters).ConfigureAwait(false);
+
+                return userId;
+            }
+            catch (PostgresException ex)
+            {
+                LogPostgresException(ex, $"Error getting user id from stripe id {stripeId}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"Error getting user id from stripe id {stripeId}");
+                throw;
+            }
+        }
+
+        public async Task UpdateSubscriptionExpiry(string customerId, DateTime expiry, IDbConnection connection)
+        {
+            if (String.IsNullOrWhiteSpace(customerId)) throw new ArgumentException("customerId must be provided");
+
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@StripeId", customerId);
+                parameters.Add("@Expiry", expiry);
+
+                await connection.ExecuteAsync(SubscriptionSql.UpdateExpiry, parameters).ConfigureAwait(false);
+            }
+            catch (PostgresException ex)
+            {
+                LogPostgresException(ex, $"Error updating subscription expiry for customer {customerId}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"Error updating subscription expiry for customer {customerId}");
+                throw;
+            }
+        }
+
+        public async Task UpdateSubscriptionStatus(string customerId, string status, IDbConnection connection)
+        {
+            if (String.IsNullOrWhiteSpace(customerId)) throw new ArgumentException("customerId must be provided");
+
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@StripeId", customerId);
+                parameters.Add("@Status", status);
+
+                await connection.ExecuteAsync(SubscriptionSql.UpdateStatus, parameters).ConfigureAwait(false);
+            }
+            catch (PostgresException ex)
+            {
+                LogPostgresException(ex, $"Error updating subscription status for customer {customerId}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"Error updating subscription status for customer {customerId}");
                 throw;
             }
         }

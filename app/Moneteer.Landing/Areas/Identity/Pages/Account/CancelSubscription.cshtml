@@ -1,0 +1,29 @@
+﻿@page
+@model CancelSubscriptionModel
+@{
+    ViewData["Title"] = "Purchase Subscription";
+}
+@inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper
+
+<section class="py-3 py-md-5">
+    <div class="container-fluid">
+        <form method="post">
+            <div class="row">
+                <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
+                    <h5 class="card-header">Cancel Subscription</h5>
+                    <div class="card-body">
+                        Are you sure you want to cancel your subscription?
+
+                        <input asp-for="SubscriptionId" type="hidden" />
+                        <div id="error-message" class="text-danger"></div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-danger">Cancel Subscription</button>
+                        <button class="btn btn-link">Back</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+

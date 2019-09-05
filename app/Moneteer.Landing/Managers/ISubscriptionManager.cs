@@ -1,4 +1,5 @@
-﻿using Stripe;
+﻿using Moneteer.Identity.Domain.Entities;
+using Moneteer.Landing.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -6,9 +7,11 @@ namespace Moneteer.Landing.Managers
 {
     public interface ISubscriptionManager
     {
-        Task<Customer> CreateStripeCustomer(Guid moneteerUserId, CustomerCreateOptions options);
+        Task<string> CreateStripeCustomer(User user);
         Task<string> GetStripeCustomerId(Guid moneteerUserId);
-        Task<bool> IsStripeCustomer(Guid moneteerUserId);
-        Task CreateSubscription(string stripeCustomerId);
+        Task UpdateSubscriptionExpiry(string customerId, DateTime newExpiry);
+        Task<Subscription> GetSubscriptionByUser(string customerId);
+        Task CancelSubscription(string subscriptionId);
+        Task UpdateSubscriptionStatus(string customerId, string newStatus);
     }
 }

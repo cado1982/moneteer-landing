@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Domain.Entities;
+using Moneteer.Landing.Managers;
+using Moneteer.Landing.Models;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 {
@@ -15,15 +17,18 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ISubscriptionManager _subscriptionManager;
         private readonly ILogger<SubscriptionModel> _logger;
 
         public SubscriptionModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
+            ISubscriptionManager subscriptionManager,
             ILogger<SubscriptionModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _subscriptionManager = subscriptionManager;
             _logger = logger;
         }
 
@@ -36,7 +41,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 
         public string UserId { get; set; }
 
-        public DateTime? SubscriptionExpiry { get; set; }
+        public Subscription Subscription { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -49,8 +54,11 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
             Email = await _userManager.GetEmailAsync(user);
             UserId = user.Id.ToString();
 
+            var customerId = await _subscriptionManager.GetStripeCustomerId(user.Id);
+
+            Subscription = await _subscriptionManager.GetSubscriptionByUser(customerId);
+
             TrialExpiry = user.TrialExpiry;
-            SubscriptionExpiry = user.SubscriptionExpiry;
 
             return Page();
         }

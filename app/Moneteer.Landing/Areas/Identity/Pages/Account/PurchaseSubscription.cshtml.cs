@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Landing.Helpers;
+using Moneteer.Landing.Managers;
 using Stripe;
 using Stripe.Checkout;
 
@@ -17,17 +18,20 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly IConfigurationHelper _configurationHelper;
         private readonly ILogger<PurchaseSubscriptionModel> _logger;
+        private readonly ISubscriptionManager _subscriptionManager;
 
         public PurchaseSubscriptionModel
         (
             UserManager<User> userManager,
             IConfigurationHelper configurationHelper,
-            ILogger<PurchaseSubscriptionModel> logger
+            ILogger<PurchaseSubscriptionModel> logger,
+            ISubscriptionManager subscriptionManager
         )
         {
             _userManager = userManager;
             _configurationHelper = configurationHelper;
             _logger = logger;
+            _subscriptionManager = subscriptionManager;
         }
 
         public DateTime TrialExpiry { get; set; }
@@ -47,17 +51,28 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 
             Email = await _userManager.GetEmailAsync(user);
 
+            var customerId = await GetOrCreateCustomer(user);
+
+            var subscription = await _subscriptionManager.GetSubscriptionByUser(customerId);
+
+            if (subscription != null) 
+            {
+                return RedirectToPage("Manage/Subscription");
+            }
+
             TrialExpiry = user.TrialExpiry;
             SubscriptionExpiry = user.SubscriptionExpiry;
 
-            var session = GetStripeSession(user);
+            var session = GetStripeSession(user, customerId);
             ViewData["StripeSessionId"] = session.Id;
 
             return Page();
         }
 
-        private Session GetStripeSession(User user)
+        private Session GetStripeSession(User user, string customerId)
         {
+            if (String.IsNullOrWhiteSpace(customerId)) throw new ArgumentException("Customer Id must be provided");
+            
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>
@@ -72,11 +87,12 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                         {
                             PlanId = _configurationHelper.Stripe.SubscriptionPlanId,
                         },
-                    },
+                    }
                 },
                 ClientReferenceId = user.Id.ToString(),
-                CustomerEmail = user.Email,
+                CustomerId = customerId,
                 Mode = "subscription",
+
                 SuccessUrl = _configurationHelper.Stripe.SubscriptionSuccessUrl,
                 CancelUrl = _configurationHelper.Stripe.SubscriptionCancelledUrl
             };
@@ -87,6 +103,20 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             _logger.LogDebug($"Generated stripe checkout session with id {session.Id} for user {user.Id}");
 
             return session;
+        }
+
+        private async Task<string> GetOrCreateCustomer(User user)
+        {
+            var customerId = await _subscriptionManager.GetStripeCustomerId(user.Id);
+
+            if (customerId == null)
+            {
+                var newCustomerId = await _subscriptionManager.CreateStripeCustomer(user);
+
+                customerId = newCustomerId;
+            }
+
+            return customerId;
         }
     }
 }

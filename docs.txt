@@ -1,0 +1,9 @@
+Testing Stripe Webhooks locally
+-------------------------------
+
+https://webhookrelay.com/blog/2017/12/26/receiving-stripe-webhooks-localhost/
+
+Once the relay client is installed, run 
+relay forward --bucket stripe http://localhost:4500/api/stripe
+
+Make sure the url is present in the stripe dashboard as a webhook url
