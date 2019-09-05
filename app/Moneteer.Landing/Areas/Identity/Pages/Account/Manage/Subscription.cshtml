@@ -16,9 +16,9 @@
                     Your 30 day trial expires on <strong>@Model.TrialExpiry.ToShortDateString()</strong>.
                 </div>
                 <div class="mt-3">Purchase a subscription for $2.99 per month to continue using the app once your trial expires.</div>
-                <button class="mt-3 btn btn-primary checkout-button">
+                <a asp-page="./../PurchaseSubscription" class="mt-3 btn btn-primary">
                     Purchase Subscription
-                </button>
+                </a>
             }
             else if (Model.SubscriptionExpiry != null && Model.SubscriptionExpiry > DateTime.UtcNow)
             {
@@ -34,9 +34,9 @@
                 <div>
                     You do not currently have a valid subscription.
                 </div>
-                <button class="mt-3 btn btn-primary checkout-button">
+                <a asp-page="./../PurchaseSubscription" class="mt-3 btn btn-primary">
                     Purchase Subscription
-                </button>                
+                </a>             
             }
 
             <div id="error-message"></div>
@@ -46,25 +46,4 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        $()
-        var stripe = Stripe('@Configuration.Stripe.PublicKey');
-
-        var checkoutButtons = $('.checkout-button');
-        
-        checkoutButtons.each(function () {
-            $(this).click(function () {
-                stripe.redirectToCheckout({
-                    items: [{
-                        plan: '@Configuration.Stripe.SubscriptionPlanId',
-                        quantity: 1
-                    }],
-                    clientReferenceId: '@Model.UserId',
-                    customerEmail: '@Model.Email',
-                    successUrl: '@Configuration.Stripe.SubscriptionSuccessUrl',
-                    cancelUrl: '@Configuration.Stripe.SubscriptionCancelledUrl'
-                });
-            })
-        });
-    </script>
 }

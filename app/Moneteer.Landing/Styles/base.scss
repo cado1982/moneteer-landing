@@ -1,6 +1,11 @@
 ﻿@import "colors.scss";
 
-.header-text-shadow {
+$fa-font-path: "../fonts/webfonts";
+
+@import "../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+
+.header-text-shadow {   
     text-shadow: 0 3px 6px $text-dark-shadow-color;
 }
 

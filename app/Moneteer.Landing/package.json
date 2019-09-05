@@ -11,8 +11,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "gulp-cli": "2.2.0",
+    "@fortawesome/fontawesome-free": "^5.10.2",
     "gulp": "3.9.1",
+    "gulp-cli": "2.2.0",
     "gulp-concat": "2.6.1",
     "gulp-notify": "^3.2.0",
     "gulp-plumber": "^1.2.1",
