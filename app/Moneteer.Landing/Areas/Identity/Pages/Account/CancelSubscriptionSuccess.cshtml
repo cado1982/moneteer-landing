@@ -1,0 +1,29 @@
+﻿@page
+@model CancelSubscriptionModel
+@{
+    ViewData["Title"] = "Subscription Canceled";
+}
+@inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper
+
+<section class="py-3 py-md-5">
+    <div class="container-fluid">
+        <form method="post">
+            <div class="row">
+                <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
+                    <div class="card-body">
+                        <h1>
+                            <i class="fas fa-check-circle text-success"></i>
+                        </h1>
+                        <p>
+                            Your subscription has been canceled.
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-page="./Manage/Subscription" class="btn btn-link">Back</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+

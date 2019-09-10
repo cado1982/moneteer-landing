@@ -10,9 +10,9 @@ namespace Moneteer.Landing.Managers
         Task<string> CreateStripeCustomer(User user);
         Task<string> GetStripeCustomerId(Guid moneteerUserId);
         Task UpdateSubscriptionExpiry(string customerId, DateTime? newExpiry);
-        // Task<SubscriptionInfo> GetSubscriptionByUser(string customerId);
         Task CancelSubscription(string subscriptionId);
         Task UpdateSubscriptionStatus(string customerId, string newStatus);
+        Task UpdateSubscription(string customerId, string subscriptionId, string status);
         Task<SubscriptionInfo> GetSubscriptionInfo(Guid userId);
     }
 }

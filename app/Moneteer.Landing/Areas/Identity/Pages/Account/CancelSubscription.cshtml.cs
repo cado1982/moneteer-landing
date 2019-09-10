@@ -45,14 +45,12 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var subscription = await _subscriptionManager.GetSubscriptionInfo(user.Id);
-
-            if (subscription == null) 
+            if (user.SubscriptionId == null) 
             {
                 return RedirectToPage("Manage/Subscription");
             }
 
-            SubscriptionId = subscription.Id;
+            SubscriptionId = user.SubscriptionId;
 
             return Page();
         }
@@ -61,7 +59,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
         {
             await _subscriptionManager.CancelSubscription(SubscriptionId);
 
-            return RedirectToPage("Manage/Subscription");
+            return RedirectToPage("CancelSubscriptionSuccess");
         }
     }
 }

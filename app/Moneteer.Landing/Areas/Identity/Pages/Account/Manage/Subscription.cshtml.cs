@@ -35,13 +35,15 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
         [TempData]
         public string StatusMessage { get; set; }
 
-        public DateTime TrialExpiry { get; set; }
+        public DateTimeOffset TrialExpiry { get; set; }
 
         public string Email { get; set; }
 
         public string UserId { get; set; }
-
-        public SubscriptionInfo Subscription { get; set; }
+        
+        public string SubscriptionId { get; set; }
+        public DateTimeOffset? SubscriptionExpiry { get; set; }
+        public string SubscriptionStatus { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -53,12 +55,10 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 
             Email = await _userManager.GetEmailAsync(user);
             UserId = user.Id.ToString();
-
-            var customerId = await _subscriptionManager.GetStripeCustomerId(user.Id);
-
-            //Subscription = await _subscriptionManager.GetSubscriptionByUser(customerId);
-
-            TrialExpiry = user.TrialExpiry;
+            SubscriptionId = user.SubscriptionId;
+            SubscriptionExpiry = user.SubscriptionExpiry == null ? (DateTimeOffset?)null : new DateTimeOffset(user.SubscriptionExpiry.Value.Add(-Constants.SubscriptionBuffer));
+            TrialExpiry = new DateTimeOffset(user.TrialExpiry);
+            SubscriptionStatus = user.SubscriptionStatus;
 
             return Page();
         }

@@ -36,9 +36,6 @@ namespace Moneteer.Landing.Managers
                 case Events.InvoicePaymentSucceeded:
                     await HandleInvoicePaymentSucceededEvent(stripeEvent);
                     break;
-                // case Events.CustomerCreated:
-                //     await HandleCustomerCreatedEvent(stripeEvent);
-                //     break;
                 default:
                     _logger.LogError($"Unexpected stripe event: {stripeEvent.Type}");
                     break;
@@ -53,8 +50,7 @@ namespace Moneteer.Landing.Managers
 
             _logger.LogInformation($"Received stripe event {stripeEvent.Type} for subscription {subscription.Id}. Status: {subscription.Status}. PeriodEnd: {subscription.CurrentPeriodEnd}");
 
-            //await _subscriptionManager.UpdateSubscriptionExpiry(subscription.CustomerId, subscription.CurrentPeriodEnd);
-            await _subscriptionManager.UpdateSubscriptionStatus(subscription.CustomerId, subscription.Status);
+            await _subscriptionManager.UpdateSubscription(subscription.CustomerId, subscription.Id, subscription.Status);
         }
 
 
@@ -66,7 +62,6 @@ namespace Moneteer.Landing.Managers
 
             _logger.LogInformation($"Received stripe event {stripeEvent.Type} for subscription {subscription.Id}.");
 
-            //await _subscriptionManager.UpdateSubscriptionExpiry(subscription.CustomerId, subscription.CurrentPeriodEnd);
             await _subscriptionManager.UpdateSubscriptionStatus(subscription.CustomerId, subscription.Status);
         }
 
@@ -81,17 +76,7 @@ namespace Moneteer.Landing.Managers
             if (stripeEvent.Data?.PreviousAttributes == null) {
                 return;
             }
-
-            // if (stripeEvent.Data.PreviousAttributes.current_period_end != null)
-            // {
-            //     var newPeriodEnd = subscription.CurrentPeriodEnd;
-
-            //     if (newPeriodEnd != null)
-            //     {
-            //         await _subscriptionManager.UpdateSubscriptionExpiry(subscription.CustomerId, (DateTime)newPeriodEnd);
-            //     }
-            // }
-
+            
             if (stripeEvent.Data.PreviousAttributes.status != null)
             {
                 var newStatus = subscription.Status;
@@ -114,16 +99,5 @@ namespace Moneteer.Landing.Managers
                 await _subscriptionManager.UpdateSubscriptionExpiry(invoice.CustomerId, periodEnd);
             }
         }
-
-        // private async Task HandleCustomerCreatedEvent(Event stripeEvent)
-        // {
-        //     if (stripeEvent == null) throw new ArgumentNullException(nameof(stripeEvent));
-
-        //     var customer = stripeEvent.Data.Object as Customer;
-
-        //     _logger.LogInformation($"Received stripe event {stripeEvent.Type} for customer {customer.Id}.");
-
-        //     //await _subscriptionManager.UpdateSubscriptionExpiry(invoice.SubscriptionId, invoice.Subscription.CurrentPeriodEnd);
-        // }
     }
 }

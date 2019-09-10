@@ -166,6 +166,32 @@ namespace Moneteer.Landing.Repositories
                 throw;
             }
         }
+
+        public async Task UpdateSubscription(string customerId, string subscriptionId, string status, IDbConnection connection)
+        {
+            if (String.IsNullOrWhiteSpace(customerId)) throw new ArgumentException("customerId must be provided");
+
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@StripeId", customerId);
+                parameters.Add("@Status", status);
+                parameters.Add("@SubscriptionId", subscriptionId);
+
+                await connection.ExecuteAsync(SubscriptionSql.Update, parameters).ConfigureAwait(false);
+            }
+            catch (PostgresException ex)
+            {
+                LogPostgresException(ex, $"Error updating subscription for customer {customerId}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"Error updating subscription for customer {customerId}");
+                throw;
+            }
+        }
     }
 }
 

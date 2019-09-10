@@ -53,7 +53,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 
             var customerId = await GetOrCreateCustomer(user);
 
-            if (user.SubscriptionStatus != null && user.SubscriptionStatus != "active") 
+            if (user.SubscriptionId != null && user.SubscriptionStatus != "canceled") 
             {
                 return RedirectToPage("Manage/Subscription");
             }
