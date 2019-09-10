@@ -41,7 +41,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 
         public string UserId { get; set; }
 
-        public Subscription Subscription { get; set; }
+        public SubscriptionInfo Subscription { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -56,7 +56,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 
             var customerId = await _subscriptionManager.GetStripeCustomerId(user.Id);
 
-            Subscription = await _subscriptionManager.GetSubscriptionByUser(customerId);
+            //Subscription = await _subscriptionManager.GetSubscriptionByUser(customerId);
 
             TrialExpiry = user.TrialExpiry;
 

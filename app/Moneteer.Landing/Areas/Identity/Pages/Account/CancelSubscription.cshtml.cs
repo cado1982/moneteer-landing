@@ -45,9 +45,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var customerId = await _subscriptionManager.GetStripeCustomerId(user.Id);
-
-            var subscription = await _subscriptionManager.GetSubscriptionByUser(customerId);
+            var subscription = await _subscriptionManager.GetSubscriptionInfo(user.Id);
 
             if (subscription == null) 
             {

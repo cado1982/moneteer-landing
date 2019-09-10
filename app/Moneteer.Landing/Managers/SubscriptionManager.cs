@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Landing.Helpers;
+using Moneteer.Landing.Models;
 using Moneteer.Landing.Repositories;
 using Stripe;
-using Subscription = Moneteer.Landing.Models.Subscription;
 
 namespace Moneteer.Landing.Managers
 {
@@ -65,36 +65,37 @@ namespace Moneteer.Landing.Managers
             }
         }
 
-        public async Task<Moneteer.Landing.Models.Subscription> GetSubscriptionByUser(string customerId)
-        {
-            if (String.IsNullOrWhiteSpace(customerId)) return null;
+        // public async Task<Moneteer.Landing.Models.SubscriptionInfo> GetSubscriptionByUser(string customerId)
+        // {
+        //     if (String.IsNullOrWhiteSpace(customerId)) return null;
 
-            var service = new SubscriptionService();
-            var subscription = (await service.ListAsync(new SubscriptionListOptions
-            {
-                CustomerId = customerId,
-                Limit = 5
-            })).FirstOrDefault();
+        //     var service = new SubscriptionService();
+        //     var subscription = (await service.ListAsync(new SubscriptionListOptions
+        //     {
+        //         CustomerId = customerId,
+        //         Limit = 5
+        //     })).FirstOrDefault();
 
-            if (subscription == null) return null;
+        //     if (subscription == null) return null;
 
-            var returnValue = new  Moneteer.Landing.Models.Subscription
-            {
-                Expiry = subscription.CurrentPeriodEnd,
-                Id = subscription.Id,
-                Status = subscription.Status
-            };
+        //     var returnValue = new  Moneteer.Landing.Models.SubscriptionInfo
+        //     {
+        //         SubExpiry = subscription.CurrentPeriodEnd,
+        //         Id = subscription.Id,
+        //         Status = subscription.Status
+        //     };
 
-            return returnValue;
-        }
+        //     return returnValue;
+        // }
 
-        public async Task UpdateSubscriptionExpiry(string customerId, DateTime newExpiry)
+        public async Task UpdateSubscriptionExpiry(string customerId, DateTime? newExpiry)
         {
             if (String.IsNullOrWhiteSpace(customerId)) throw new ArgumentException("Customer id is empty");
 
             using (var conn = _connectionProvider.GetOpenConnection())
             {
-                await _subscriptionRepository.UpdateSubscriptionExpiry(customerId, newExpiry, conn);
+                // Add 2 days lee-way
+                await _subscriptionRepository.UpdateSubscriptionExpiry(customerId, newExpiry?.AddDays(2), conn);
             }
         }
 
@@ -118,6 +119,18 @@ namespace Moneteer.Landing.Managers
                 await _subscriptionRepository.UpdateSubscriptionStatus(customerId, newStatus, conn);
             }
             
+        }
+
+        public async Task<Models.SubscriptionInfo> GetSubscriptionInfo(Guid userId)
+        {
+            if (userId == Guid.Empty) throw new ArgumentException("UserId must be provided", nameof(userId));
+
+            using (var conn = _connectionProvider.GetOpenConnection())
+            {
+                var info = await _subscriptionRepository.GetSubscriptionInfo(userId, conn);
+
+                return info;
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
+using Moneteer.Landing.Models;
 using Moneteer.Landing.Sql;
 using Npgsql;
 
@@ -92,7 +93,7 @@ namespace Moneteer.Landing.Repositories
             }
         }
 
-        public async Task UpdateSubscriptionExpiry(string customerId, DateTime expiry, IDbConnection connection)
+        public async Task UpdateSubscriptionExpiry(string customerId, DateTime? expiry, IDbConnection connection)
         {
             if (String.IsNullOrWhiteSpace(customerId)) throw new ArgumentException("customerId must be provided");
 
@@ -138,6 +139,30 @@ namespace Moneteer.Landing.Repositories
             catch (Exception ex)
             {
                 Logger.LogError(ex, $"Error updating subscription status for customer {customerId}");
+                throw;
+            }
+        }
+
+        public async Task<SubscriptionInfo> GetSubscriptionInfo(Guid userId, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@UserId", userId);
+
+                var result = await connection.QuerySingleOrDefaultAsync<SubscriptionInfo>(SubscriptionSql.GetSubscriptionInfo, parameters).ConfigureAwait(false);
+
+                return result;
+            }
+            catch (PostgresException ex)
+            {
+                LogPostgresException(ex, $"Error getting subscription info for user {userId}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"Error getting subscription info for user {userId}");
                 throw;
             }
         }

@@ -56,6 +56,7 @@ namespace Moneteer.Landing.V2
             services.AddTransient<IBudgetRepository, BudgetRepository>();
             services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
             services.AddTransient<ISubscriptionManager, SubscriptionManager>();
+            services.AddTransient<IStripeWebhookManager, StripeWebhookManager>();
 
             services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(moneteerConnectionString));
             services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(moneteerConnectionString));
