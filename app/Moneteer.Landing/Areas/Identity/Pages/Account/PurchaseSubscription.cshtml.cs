@@ -83,7 +83,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                     {
                         new SessionSubscriptionDataItemOptions 
                         {
-                            PlanId = _configurationHelper.Stripe.SubscriptionPlanId,
+                            PlanId = _configurationHelper.Stripe.SubscriptionPlanId
                         },
                     }
                 },

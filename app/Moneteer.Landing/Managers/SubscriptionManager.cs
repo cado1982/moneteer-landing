@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Moneteer.Identity.Domain.Entities;
@@ -114,6 +115,22 @@ namespace Moneteer.Landing.Managers
 
                 return info;
             }
+        }
+
+        public async Task<StripeList<Invoice>> GetInvoices(string customerId, int count, string previousId = null)
+        {
+            var service = new InvoiceService();
+
+            var options = new InvoiceListOptions();
+            options.CustomerId = customerId;
+            options.Limit = count;
+
+            if (previousId != null)
+            {
+                options.StartingAfter = previousId;
+            }
+            
+            return await service.ListAsync(options);
         }
     }
 }

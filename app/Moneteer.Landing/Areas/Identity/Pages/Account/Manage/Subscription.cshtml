@@ -48,6 +48,38 @@
                 </a>
             }
 
+            if (Model.Invoices != null && Model.Invoices.Count() > 0)
+            {
+                <div class="mt-4" id="invoices">
+                    <h5>Invoices</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Invoice Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var invoice in Model.Invoices)
+                            {
+                                <tr>
+                                    <td>@invoice.Created.ToShortDateString() @invoice.Created.ToShortTimeString()</td>
+                                    <td>@invoice.Currency @invoice.AmountDue/100</td>
+                                    <td>@invoice.Status</td>
+                                </tr>
+                            }
+                            
+                        </tbody>
+                    </table>
+                    @if (Model.Invoices.HasMore)
+                    {
+                        <button class="btn btn-link">Get More...</button>
+                    }
+                </div>
+                
+            }
+
             <div id="error-message"></div>
         }
     </div>

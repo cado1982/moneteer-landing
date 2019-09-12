@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Landing.Managers;
 using Moneteer.Landing.Models;
+using Stripe;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 {
@@ -44,6 +45,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
         public string SubscriptionId { get; set; }
         public DateTimeOffset? SubscriptionExpiry { get; set; }
         public string SubscriptionStatus { get; set; }
+        public StripeList<Invoice> Invoices { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -59,6 +61,11 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
             SubscriptionExpiry = user.SubscriptionExpiry == null ? (DateTimeOffset?)null : new DateTimeOffset(user.SubscriptionExpiry.Value.Add(-Constants.SubscriptionBuffer));
             TrialExpiry = new DateTimeOffset(user.TrialExpiry);
             SubscriptionStatus = user.SubscriptionStatus;
+
+            if (user.StripeId != null)
+            {
+                Invoices = await _subscriptionManager.GetInvoices(user.StripeId, 10, null);
+            }
 
             return Page();
         }
