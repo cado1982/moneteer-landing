@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,8 +7,6 @@ using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Landing.Helpers;
 using Moneteer.Landing.Managers;
-using Stripe;
-using Stripe.Checkout;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 {
@@ -51,7 +48,11 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 
             Email = await _userManager.GetEmailAsync(user);
 
-            var customerId = await GetOrCreateCustomer(user);
+            if (user.StripeId == null)
+            {
+                var newCustomer = await _subscriptionManager.CreateStripeCustomer(user);
+                user.StripeId = newCustomer.Id;
+            }
 
             if (user.SubscriptionId != null && user.SubscriptionStatus != "canceled") 
             {
@@ -61,60 +62,10 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             TrialExpiry = user.TrialExpiry;
             SubscriptionExpiry = user.SubscriptionExpiry;
 
-            var session = GetStripeSession(user, customerId);
+            var session = await _subscriptionManager.CreatePurchaseSubscriptionSessionAsync(user);
             ViewData["StripeSessionId"] = session.Id;
 
             return Page();
-        }
-
-        private Session GetStripeSession(User user, string customerId)
-        {
-            if (String.IsNullOrWhiteSpace(customerId)) throw new ArgumentException("Customer Id must be provided");
-            
-            var options = new SessionCreateOptions
-            {
-                PaymentMethodTypes = new List<string>
-                {
-                    "card",
-                },
-                SubscriptionData = new SessionSubscriptionDataOptions
-                {
-                    Items = new List<SessionSubscriptionDataItemOptions> 
-                    {
-                        new SessionSubscriptionDataItemOptions 
-                        {
-                            PlanId = _configurationHelper.Stripe.SubscriptionPlanId
-                        },
-                    }
-                },
-                ClientReferenceId = user.Id.ToString(),
-                CustomerId = customerId,
-                Mode = "subscription",
-
-                SuccessUrl = _configurationHelper.Stripe.SubscriptionSuccessUrl,
-                CancelUrl = _configurationHelper.Stripe.SubscriptionCancelledUrl
-            };
-
-            var service = new SessionService();
-            Session session = service.Create(options);
-
-            _logger.LogDebug($"Generated stripe checkout session with id {session.Id} for user {user.Id}");
-
-            return session;
-        }
-
-        private async Task<string> GetOrCreateCustomer(User user)
-        {
-            var customerId = await _subscriptionManager.GetStripeCustomerId(user.Id);
-
-            if (customerId == null)
-            {
-                var newCustomerId = await _subscriptionManager.CreateStripeCustomer(user);
-
-                customerId = newCustomerId;
-            }
-
-            return customerId;
         }
     }
 }

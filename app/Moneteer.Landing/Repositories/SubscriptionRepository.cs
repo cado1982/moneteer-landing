@@ -14,33 +14,7 @@ namespace Moneteer.Landing.Repositories
         public SubscriptionRepository(ILogger<SubscriptionRepository> logger) : base(logger)
         {
         }
-
-        public async Task<string> GetStripeId(Guid userId, IDbConnection connection)
-        {
-            if (userId == Guid.Empty) throw new ArgumentException("userId must be provided");
-
-            try
-            {
-                var parameters = new DynamicParameters();
-
-                parameters.Add("@UserId", userId);
-
-                var stripeId = await connection.ExecuteScalarAsync<string>(SubscriptionSql.GetStripeId, parameters).ConfigureAwait(false);
-
-                return stripeId;
-            }
-            catch (PostgresException ex)
-            {
-                LogPostgresException(ex, $"Error getting stripe id for user {userId}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, $"Error getting stripe id for user {userId}");
-                throw;
-            }
-        }
-
+        
         public async Task SetStripeId(Guid userId, string stripeId, IDbConnection connection)
         {
             if (userId == Guid.Empty) throw new ArgumentException("userId must be provided");
@@ -63,32 +37,6 @@ namespace Moneteer.Landing.Repositories
             catch (Exception ex)
             {
                 Logger.LogError(ex, $"Error setting stripe id for user {userId}");
-                throw;
-            }
-        }
-
-        public async Task<string> GetUserIdFromStripeCustomerId(string stripeId, IDbConnection connection)
-        {
-            if (String.IsNullOrWhiteSpace(stripeId)) throw new ArgumentException("stripeId must be provided");
-
-            try
-            {
-                var parameters = new DynamicParameters();
-
-                parameters.Add("@StripeId", stripeId);
-
-                var userId = await connection.ExecuteScalarAsync<string>(SubscriptionSql.GetUserId, parameters).ConfigureAwait(false);
-
-                return userId;
-            }
-            catch (PostgresException ex)
-            {
-                LogPostgresException(ex, $"Error getting user id from stripe id {stripeId}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, $"Error getting user id from stripe id {stripeId}");
                 throw;
             }
         }
@@ -139,30 +87,6 @@ namespace Moneteer.Landing.Repositories
             catch (Exception ex)
             {
                 Logger.LogError(ex, $"Error updating subscription status for customer {customerId}");
-                throw;
-            }
-        }
-
-        public async Task<SubscriptionInfo> GetSubscriptionInfo(Guid userId, IDbConnection connection)
-        {
-            try
-            {
-                var parameters = new DynamicParameters();
-
-                parameters.Add("@UserId", userId);
-
-                var result = await connection.QuerySingleOrDefaultAsync<SubscriptionInfo>(SubscriptionSql.GetSubscriptionInfo, parameters).ConfigureAwait(false);
-
-                return result;
-            }
-            catch (PostgresException ex)
-            {
-                LogPostgresException(ex, $"Error getting subscription info for user {userId}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, $"Error getting subscription info for user {userId}");
                 throw;
             }
         }

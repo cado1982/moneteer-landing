@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Domain.Entities;
+using Moneteer.Landing.Helpers;
 using Moneteer.Landing.Managers;
 using Moneteer.Landing.Models;
 using Stripe;
+using Stripe.Checkout;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 {
@@ -19,17 +21,20 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ISubscriptionManager _subscriptionManager;
+        private readonly IConfigurationHelper _configuration;
         private readonly ILogger<SubscriptionModel> _logger;
 
         public SubscriptionModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             ISubscriptionManager subscriptionManager,
+            IConfigurationHelper configuration,
             ILogger<SubscriptionModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _subscriptionManager = subscriptionManager;
+            _configuration = configuration;
             _logger = logger;
         }
 
@@ -66,6 +71,10 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
             {
                 Invoices = await _subscriptionManager.GetInvoices(user.StripeId, 10, null);
             }
+
+            var updatePaymentMethodSession = await _subscriptionManager.CreateUpdatePaymentMethodSessionAsync(user);
+
+            ViewData["StripeSessionId"] = updatePaymentMethodSession.Id;
 
             return Page();
         }

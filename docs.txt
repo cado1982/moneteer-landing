@@ -1,9 +1,10 @@
 Testing Stripe Webhooks locally
 -------------------------------
 
-https://webhookrelay.com/blog/2017/12/26/receiving-stripe-webhooks-localhost/
+https://localtunnel.github.io/www/
 
-Once the relay client is installed, run 
-relay forward --bucket stripe http://localhost:4500/api/stripe
+Install localtunnel with npm install -g localtunnel
 
-Make sure the url is present in the stripe dashboard as a webhook url
+then run...
+
+lt --port 4500 --local-host localhost --subdomain moneteer-dev

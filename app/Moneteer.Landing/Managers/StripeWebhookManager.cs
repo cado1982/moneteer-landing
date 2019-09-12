@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Stripe;
+using Stripe.Checkout;
 
 namespace Moneteer.Landing.Managers
 {
@@ -35,6 +36,9 @@ namespace Moneteer.Landing.Managers
                     break;
                 case Events.InvoicePaymentSucceeded:
                     await HandleInvoicePaymentSucceededEvent(stripeEvent);
+                    break;
+                case Events.CheckoutSessionCompleted:
+                    await HandleCheckoutSessionCompleted(stripeEvent);
                     break;
                 default:
                     _logger.LogError($"Unexpected stripe event: {stripeEvent.Type}");
@@ -97,6 +101,37 @@ namespace Moneteer.Landing.Managers
             if (periodEnd != null)
             {
                 await _subscriptionManager.UpdateSubscriptionExpiry(invoice.CustomerId, periodEnd);
+            }
+        }
+
+        private async Task HandleCheckoutSessionCompleted(Event stripeEvent)
+        {
+            if (stripeEvent == null) throw new ArgumentNullException(nameof(stripeEvent));
+
+            var session = stripeEvent.Data.Object as Session;
+
+            _logger.LogInformation($"Received stripe event {stripeEvent.Type} for session {session.Id}.");
+                        
+            if (session.SetupIntentId != null)
+            // We're updating the payment on an existing subscription
+            {
+                var setupIntentService = new SetupIntentService();
+
+                var setupIntent = await setupIntentService.GetAsync(session.SetupIntentId);
+
+                var paymentMethodId = setupIntent.PaymentMethodId;
+                var customerId = setupIntent.Metadata["customer_id"];
+                var subscriptionId = setupIntent.Metadata["subscription_id"];
+
+                var paymentMethodsService = new PaymentMethodService();
+                var attachOptions = new PaymentMethodAttachOptions();
+                attachOptions.CustomerId = customerId;
+                await paymentMethodsService.AttachAsync(paymentMethodId, attachOptions);
+
+                var subscriptionService = new SubscriptionService();
+                var updateOptions = new SubscriptionUpdateOptions();
+                updateOptions.DefaultPaymentMethodId = paymentMethodId;
+                await subscriptionService.UpdateAsync(subscriptionId, updateOptions);
             }
         }
     }

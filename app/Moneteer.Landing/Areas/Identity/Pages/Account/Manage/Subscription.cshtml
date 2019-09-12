@@ -30,6 +30,8 @@
                     <a asp-page="./../CancelSubscription" class="mt-3 btn btn-danger">
                         Cancel Subscription
                     </a>
+                    
+                    <button id="update-payment-method" class="mt-3 btn btn-primary">Update payment method</button>
                 }
                 else
                 {
@@ -52,10 +54,11 @@
             {
                 <div class="mt-4" id="invoices">
                     <h5>Invoices</h5>
-                    <table class="table">
+                    <table class="table mt-4 ml-3">
                         <thead>
                             <tr>
-                                <th>Invoice Date</th>
+                                <th>Id</th>
+                                <th>Date</th>
                                 <th>Amount</th>
                                 <th>Status</th>
                             </tr>
@@ -64,12 +67,13 @@
                             @foreach (var invoice in Model.Invoices)
                             {
                                 <tr>
-                                    <td>@invoice.Created.ToShortDateString() @invoice.Created.ToShortTimeString()</td>
-                                    <td>@invoice.Currency @invoice.AmountDue/100</td>
+                                    <th>@invoice.Number</th>
+                                    <td>@invoice.Created.ToShortDateString()</td>
+                                    <td>$@(invoice.AmountDue / 100d)</td>
                                     <td>@invoice.Status</td>
                                 </tr>
                             }
-                            
+
                         </tbody>
                     </table>
                     @if (Model.Invoices.HasMore)
@@ -77,7 +81,7 @@
                         <button class="btn btn-link">Get More...</button>
                     }
                 </div>
-                
+
             }
 
             <div id="error-message"></div>
@@ -86,5 +90,19 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var stripe = Stripe('@Configuration.Stripe.PublicKey');
+
+        var checkoutButton = $('#update-payment-method');
+
+        checkoutButton.click(function () {
+            stripe.redirectToCheckout({
+                sessionId: '@ViewData["StripeSessionId"]'
+            }).then(function(result) {
+                if (!!result.error && !!result.error.message) {
+                    $('#error-message').innerText = result.error.message
+                }
+            });
+        });
+    </script>
 }
