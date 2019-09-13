@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Landing.Helpers;
 using Moneteer.Landing.Managers;
+using Moneteer.Landing.Models;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 {
@@ -31,9 +32,6 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             _subscriptionManager = subscriptionManager;
         }
 
-        public DateTime TrialExpiry { get; set; }
-
-        public string Email { get; set; }
         public string UserId { get; set; }
 
         public DateTime? SubscriptionExpiry { get; set; }
@@ -46,21 +44,28 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            Email = await _userManager.GetEmailAsync(user);
-
-            if (user.StripeId == null)
+            if (user.StripeId != null)
+            {
+                var activeSubscription = await _subscriptionManager.GetActiveSubscription(user.StripeId);
+                
+                if (activeSubscription != null)
+                {
+                    if (activeSubscription.Status == SubscriptionStatus.IncompleteExpired || 
+                        activeSubscription.Status == SubscriptionStatus.Incomplete)
+                    {
+                        await _subscriptionManager.CancelSubscription(activeSubscription.Id);
+                    }
+                    else 
+                    {
+                        return RedirectToPage("Manage/Subscription");
+                    }
+                }
+            }
+            else
             {
                 var newCustomer = await _subscriptionManager.CreateStripeCustomer(user);
                 user.StripeId = newCustomer.Id;
             }
-
-            if (user.SubscriptionId != null && user.SubscriptionStatus != "canceled") 
-            {
-                return RedirectToPage("Manage/Subscription");
-            }
-
-            TrialExpiry = user.TrialExpiry;
-            SubscriptionExpiry = user.SubscriptionExpiry;
 
             var session = await _subscriptionManager.CreatePurchaseSubscriptionSessionAsync(user);
             ViewData["StripeSessionId"] = session.Id;

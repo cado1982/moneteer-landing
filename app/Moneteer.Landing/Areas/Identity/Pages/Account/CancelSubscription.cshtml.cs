@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,8 +7,6 @@ using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Landing.Helpers;
 using Moneteer.Landing.Managers;
-using Stripe;
-using Stripe.Checkout;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 {
@@ -45,14 +42,18 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            if (user.SubscriptionId == null) 
+            if (user.StripeId != null)
             {
-                return RedirectToPage("Manage/Subscription");
+                var activeSubscription = await _subscriptionManager.GetActiveSubscription(user.StripeId);
+
+                if (activeSubscription != null)
+                {
+                    SubscriptionId = activeSubscription.Id;
+                    return Page();
+                }
             }
 
-            SubscriptionId = user.SubscriptionId;
-
-            return Page();
+            return RedirectToPage("Manage/Subscription");
         }
 
         public async Task<IActionResult> OnPostAsync()

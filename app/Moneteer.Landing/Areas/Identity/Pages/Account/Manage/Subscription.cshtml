@@ -1,5 +1,6 @@
 ﻿@page
 @model SubscriptionModel
+@using Moneteer.Landing.Models
 @{
     ViewData["Title"] = "Subscription";
 }
@@ -10,47 +11,57 @@
 <div class="row mt-4">
     <div class="col-md-6">
         @{
-            if (Model.TrialExpiry > DateTimeOffset.Now && Model.SubscriptionExpiry == null)
+            if (Model.TrialExpiry > DateTimeOffset.Now && Model.ActiveSubscription == null)
             {
                 <div>
                     Your 30 day trial expires on <strong>@Model.TrialExpiry.LocalDateTime.ToShortDateString()</strong>.
                 </div>
-                <div class="mt-3">Purchase a subscription to continue using the app once your trial expires.</div>
+                <div class="mt-3">Purchase a subscription to continue using Moneteer once your trial expires.</div>
                 <a asp-page="./../PurchaseSubscription" class="mt-3 btn btn-primary">
                     Purchase Subscription
                 </a>
             }
-            else if (Model.SubscriptionId != null && Model.SubscriptionExpiry != null && Model.SubscriptionExpiry > DateTimeOffset.Now)
+            else if (Model.ActiveSubscription != null)
             {
-                <div>Subscription Status: <strong>@Model.SubscriptionStatus</strong></div>
-                <div>Subscription Expiry: <strong>@Model.SubscriptionExpiry.Value.LocalDateTime.ToShortDateString()</strong></div>
+                <div>Status: <strong>@Model.ActiveSubscription.Status</strong></div>
 
-                @if (Model.SubscriptionStatus.ToLowerInvariant() != "canceled")
+                if (Model.ActiveSubscription.CurrentPeriodStart.HasValue && Model.ActiveSubscription.CurrentPeriodEnd.HasValue)
+                {
+                    <div>Current Period: <strong>@Model.ActiveSubscription.CurrentPeriodStart.Value.ToShortDateString() - @Model.ActiveSubscription.CurrentPeriodEnd.Value.ToShortDateString()</strong></div>
+                }
+                
+                if (Model.ActiveSubscription.Status == SubscriptionStatus.IncompleteExpired || Model.ActiveSubscription.Status == SubscriptionStatus.Incomplete)
+                {
+                    <a asp-page="./../PurchaseSubscription" class="mt-3 btn btn-primary">
+                        Purchase Subscription
+                    </a>
+                }
+                else
                 {
                     <a asp-page="./../CancelSubscription" class="mt-3 btn btn-danger">
                         Cancel Subscription
                     </a>
                     
-                    <button id="update-payment-method" class="mt-3 btn btn-primary">Update payment method</button>
-                }
-                else
-                {
-                    <a asp-page="./../PurchaseSubscription" class="mt-3 btn btn-primary">
-                        Purchase New Subscription
-                    </a>
+                    <button id="update-payment-method" class="mt-3 btn btn-primary">Update payment method</button>    
                 }
             }
             else
             {
                 <div>
-                    You do not currently have a valid subscription.
+                    You do not currently have an active subscription.
                 </div>
+                if (Model.SubscriptionExpiry.HasValue && Model.SubscriptionExpiry.Value > DateTime.UtcNow)
+                {
+                    <div>
+                        Your access to Moneteer will expire on <strong>@Model.SubscriptionExpiry.Value.LocalDateTime.ToShortDateString()</strong>
+                    </div>
+                }
                 <a asp-page="./../PurchaseSubscription" class="mt-3 btn btn-primary">
                     Purchase Subscription
                 </a>
             }
 
-            if (Model.Invoices != null && Model.Invoices.Count() > 0)
+            if (Model.Invoices != null && Model.Invoices.Any())
             {
                 <div class="mt-4" id="invoices">
                     <h5>Invoices</h5>
@@ -76,12 +87,7 @@
 
                         </tbody>
                     </table>
-                    @if (Model.Invoices.HasMore)
-                    {
-                        <button class="btn btn-link">Get More...</button>
-                    }
                 </div>
-
             }
 
             <div id="error-message"></div>
@@ -94,8 +100,16 @@
         var stripe = Stripe('@Configuration.Stripe.PublicKey');
 
         var checkoutButton = $('#update-payment-method');
+        var completePaymentButton = $('#complete-payment');
 
         checkoutButton.click(function () {
+            redirectToCheckout();
+        });
+        completePaymentButton.click(function () {
+            redirectToCheckout();
+        });
+
+        function redirectToCheckout() {
             stripe.redirectToCheckout({
                 sessionId: '@ViewData["StripeSessionId"]'
             }).then(function(result) {
@@ -103,6 +117,6 @@
                     $('#error-message').innerText = result.error.message
                 }
             });
-        });
+        }
     </script>
 }

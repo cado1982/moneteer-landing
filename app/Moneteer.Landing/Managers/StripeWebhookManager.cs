@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Moneteer.Landing.Models;
 using Newtonsoft.Json;
 using Stripe;
 using Stripe.Checkout;
@@ -25,15 +26,6 @@ namespace Moneteer.Landing.Managers
         {
             switch (stripeEvent.Type)
             {
-                case Events.CustomerSubscriptionCreated:
-                    await HandleCustomerSubscriptionCreatedEvent(stripeEvent);
-                    break;
-                case Events.CustomerSubscriptionDeleted:
-                    await HandleCustomerSubscriptionDeletedEvent(stripeEvent);
-                    break;
-                case Events.CustomerSubscriptionUpdated:
-                    await HandleCustomerSubscriptionUpdatedEvent(stripeEvent);
-                    break;
                 case Events.InvoicePaymentSucceeded:
                     await HandleInvoicePaymentSucceededEvent(stripeEvent);
                     break;
@@ -43,48 +35,6 @@ namespace Moneteer.Landing.Managers
                 default:
                     _logger.LogError($"Unexpected stripe event: {stripeEvent.Type}");
                     break;
-            }
-        }
-
-        private async Task HandleCustomerSubscriptionCreatedEvent(Event stripeEvent)
-        {
-            if (stripeEvent == null) throw new ArgumentNullException(nameof(stripeEvent));
-
-            var subscription = stripeEvent.Data.Object as Subscription;
-
-            _logger.LogInformation($"Received stripe event {stripeEvent.Type} for subscription {subscription.Id}. Status: {subscription.Status}. PeriodEnd: {subscription.CurrentPeriodEnd}");
-
-            await _subscriptionManager.UpdateSubscription(subscription.CustomerId, subscription.Id, subscription.Status);
-        }
-
-
-        private async Task HandleCustomerSubscriptionDeletedEvent(Event stripeEvent)
-        {
-            if (stripeEvent == null) throw new ArgumentNullException(nameof(stripeEvent));
-
-            var subscription = stripeEvent.Data.Object as Subscription;
-
-            _logger.LogInformation($"Received stripe event {stripeEvent.Type} for subscription {subscription.Id}.");
-
-            await _subscriptionManager.UpdateSubscriptionStatus(subscription.CustomerId, subscription.Status);
-        }
-
-        private async Task HandleCustomerSubscriptionUpdatedEvent(Event stripeEvent)
-        {
-            if (stripeEvent == null) throw new ArgumentNullException(nameof(stripeEvent));
-
-            var subscription = stripeEvent.Data.Object as Subscription;
-
-            _logger.LogInformation($"Received stripe event {stripeEvent.Type} for subscription {subscription.Id}. Status: {subscription.Status}. PeriodEnd: {subscription.CurrentPeriodEnd}");
-
-            if (stripeEvent.Data?.PreviousAttributes == null) {
-                return;
-            }
-            
-            if (stripeEvent.Data.PreviousAttributes.status != null)
-            {
-                var newStatus = subscription.Status;
-                await _subscriptionManager.UpdateSubscriptionStatus(subscription.CustomerId, newStatus);
             }
         }
 
@@ -100,7 +50,7 @@ namespace Moneteer.Landing.Managers
 
             if (periodEnd != null)
             {
-                await _subscriptionManager.UpdateSubscriptionExpiry(invoice.CustomerId, periodEnd);
+                await _subscriptionManager.UpdateSubscriptionExpiry(invoice.CustomerId, periodEnd.Value);
             }
         }
 
@@ -112,8 +62,8 @@ namespace Moneteer.Landing.Managers
 
             _logger.LogInformation($"Received stripe event {stripeEvent.Type} for session {session.Id}.");
                         
-            if (session.SetupIntentId != null)
             // We're updating the payment on an existing subscription
+            if (session.SetupIntentId != null)
             {
                 var setupIntentService = new SetupIntentService();
 
@@ -121,17 +71,23 @@ namespace Moneteer.Landing.Managers
 
                 var paymentMethodId = setupIntent.PaymentMethodId;
                 var customerId = setupIntent.Metadata["customer_id"];
-                var subscriptionId = setupIntent.Metadata["subscription_id"];
 
                 var paymentMethodsService = new PaymentMethodService();
                 var attachOptions = new PaymentMethodAttachOptions();
                 attachOptions.CustomerId = customerId;
                 await paymentMethodsService.AttachAsync(paymentMethodId, attachOptions);
 
-                var subscriptionService = new SubscriptionService();
-                var updateOptions = new SubscriptionUpdateOptions();
-                updateOptions.DefaultPaymentMethodId = paymentMethodId;
-                await subscriptionService.UpdateAsync(subscriptionId, updateOptions);
+                var customerService = new CustomerService();
+                var options = new CustomerUpdateOptions 
+                {
+                    InvoiceSettings = new CustomerInvoiceSettingsOptions 
+                    {
+                        DefaultPaymentMethodId = paymentMethodId,
+                    },
+                };
+                customerService.Update(customerId, options);
+
+                _logger.LogInformation($"Updated default payment method for customer {customerId}");
             }
         }
     }

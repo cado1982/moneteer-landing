@@ -21,6 +21,10 @@ task_definition:
           name: TokenSigningCert
         - value_from: MoneteerIdentityTokenSigningCertSecret
           name: TokenSigningCertSecret
+        - value_from: /Moneteer/Stripe/ApiKey
+          name: Stripe:ApiKey
+        - value_from: /Moneteer/Stripe/WebhookSigningKey
+          name: Stripe:WebhookSigningKey
     proxy:
       essential: true
 run_params:

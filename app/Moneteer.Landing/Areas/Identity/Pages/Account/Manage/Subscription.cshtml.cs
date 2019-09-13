@@ -19,22 +19,16 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
     public class SubscriptionModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly ISubscriptionManager _subscriptionManager;
-        private readonly IConfigurationHelper _configuration;
         private readonly ILogger<SubscriptionModel> _logger;
 
         public SubscriptionModel(
             UserManager<User> userManager,
-            SignInManager<User> signInManager,
             ISubscriptionManager subscriptionManager,
-            IConfigurationHelper configuration,
             ILogger<SubscriptionModel> logger)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _subscriptionManager = subscriptionManager;
-            _configuration = configuration;
             _logger = logger;
         }
 
@@ -42,15 +36,13 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
         public string StatusMessage { get; set; }
 
         public DateTimeOffset TrialExpiry { get; set; }
-
-        public string Email { get; set; }
-
-        public string UserId { get; set; }
-        
-        public string SubscriptionId { get; set; }
         public DateTimeOffset? SubscriptionExpiry { get; set; }
-        public string SubscriptionStatus { get; set; }
+
         public StripeList<Invoice> Invoices { get; set; }
+        public Subscription ActiveSubscription { get; set; }
+
+        public string StripeCustomerId { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -60,21 +52,23 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            Email = await _userManager.GetEmailAsync(user);
-            UserId = user.Id.ToString();
-            SubscriptionId = user.SubscriptionId;
-            SubscriptionExpiry = user.SubscriptionExpiry == null ? (DateTimeOffset?)null : new DateTimeOffset(user.SubscriptionExpiry.Value.Add(-Constants.SubscriptionBuffer));
+            StripeCustomerId = user.StripeId;
+
             TrialExpiry = new DateTimeOffset(user.TrialExpiry);
-            SubscriptionStatus = user.SubscriptionStatus;
+            SubscriptionExpiry = user.SubscriptionExpiry.HasValue ? new DateTimeOffset(user.SubscriptionExpiry.Value) : (DateTimeOffset?)null;
 
             if (user.StripeId != null)
             {
-                Invoices = await _subscriptionManager.GetInvoices(user.StripeId, 10, null);
+                ActiveSubscription = await _subscriptionManager.GetActiveSubscription(user.StripeId);
+                Invoices = await _subscriptionManager.GetInvoices(user.StripeId);
             }
 
-            var updatePaymentMethodSession = await _subscriptionManager.CreateUpdatePaymentMethodSessionAsync(user);
-
-            ViewData["StripeSessionId"] = updatePaymentMethodSession.Id;
+            if (ActiveSubscription != null)
+            {
+                // We might not need this session but we have to create it in case the user clicks on Update Payment Method button
+                var updatePaymentMethodSession = await _subscriptionManager.CreateUpdatePaymentMethodSessionAsync(user);
+                ViewData["StripeSessionId"] = updatePaymentMethodSession.Id;
+            }
 
             return Page();
         }
