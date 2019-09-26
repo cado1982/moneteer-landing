@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Domain.Entities;
+using Moneteer.Landing.Managers;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 {
@@ -16,15 +17,18 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ISubscriptionManager _subscriptionManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
 
         public DeletePersonalDataModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
+            ISubscriptionManager subscriptionManager,
             ILogger<DeletePersonalDataModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _subscriptionManager = subscriptionManager;
             _logger = logger;
         }
 
@@ -67,6 +71,17 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
                 {
                     ModelState.AddModelError(string.Empty, "Password not correct.");
                     return Page();
+                }
+            }
+
+            // Cancel the user's subscription if they have one.
+            if (user.StripeId != null)
+            {
+                var activeSubscription = await _subscriptionManager.GetActiveSubscription(user.StripeId);
+
+                if (activeSubscription != null)
+                {
+                    await _subscriptionManager.CancelSubscription(activeSubscription.Id);
                 }
             }
 
