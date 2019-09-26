@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Moneteer.Identity.Domain.Entities;
+using Moneteer.Landing.Managers;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 {
@@ -16,13 +17,16 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly ILogger<DownloadPersonalDataModel> _logger;
+        private readonly IPersonalDataManager _personalDataManager;
 
         public DownloadPersonalDataModel(
             UserManager<User> userManager,
-            ILogger<DownloadPersonalDataModel> logger)
+            ILogger<DownloadPersonalDataModel> logger,
+            IPersonalDataManager personalDataManager)
         {
             _userManager = userManager;
             _logger = logger;
+            _personalDataManager = personalDataManager;
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -35,14 +39,7 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 
             _logger.LogInformation("User with ID '{UserId}' asked for their personal data.", _userManager.GetUserId(User));
 
-            // Only include personal data for download
-            var personalData = new Dictionary<string, string>();
-            var personalDataProps = typeof(User).GetProperties().Where(
-                            prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
-            foreach (var p in personalDataProps)
-            {
-                personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
-            }
+            var personalData = await _personalDataManager.GetPersonalDataAsync(user);
 
             Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
             return new FileContentResult(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(personalData)), "text/json");

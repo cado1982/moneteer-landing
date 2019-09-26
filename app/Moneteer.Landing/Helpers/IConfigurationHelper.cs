@@ -7,5 +7,7 @@ namespace Moneteer.Landing.Helpers
         string AppUri { get; }
         int TrialNumberOfDays { get; }
         StripeConfiguration Stripe { get; }
+        string ClientSecret { get; }
+        string ApiUri { get; }
     }
 }

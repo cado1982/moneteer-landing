@@ -22,9 +22,19 @@ namespace Moneteer.Landing.Helpers
             get { return _configuration["AppUri"]; }
         }
 
+        public string ApiUri
+        {
+            get { return _configuration["ApiUri"]; }
+        }
+
         public int TrialNumberOfDays
         {
             get { return Int32.Parse(_configuration["TrialNumberOfDays"]); }
+        }
+
+        public string ClientSecret
+        {
+            get { return _configuration["ClientSecret"]; }
         }
 
         public StripeConfiguration Stripe
