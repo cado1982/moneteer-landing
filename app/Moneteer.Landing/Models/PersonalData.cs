@@ -1,12 +1,19 @@
-﻿using System;
+﻿using Moneteer.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Moneteer.Landing.Models
 {
     public class PersonalData
     {
-        public Dictionary<String, string> UserData { get; set; }
+        public Dictionary<string, string> UserData { get; set; }
+        public AppData AppData { get; set; }
+    }
+
+    public class AppData
+    {
+        public List<Transaction> Transactions { get; set; }
+        public List<Account> Accounts { get; set; }
+        public List<Envelope> Envelopes { get; set; }
+        public List<EnvelopeCategory> EnvelopeCategories { get; set; }
     }
 }

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -9,8 +7,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Moneteer.Landing.Models;
-using Moneteer.Landing.Repositories;
 using Moneteer.Identity.Domain.Entities;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
@@ -22,7 +18,6 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly IBudgetRepository _budgetRepository;
         private readonly IConnectionProvider _connectionProvider;
 
         public ResendSignUpLinkModel(
@@ -30,14 +25,12 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IBudgetRepository budgetRepository,
             IConnectionProvider connectionProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _budgetRepository = budgetRepository;
             _connectionProvider = connectionProvider;
         }
 

@@ -2,15 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using System.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Moneteer.Landing.Models;
-using Moneteer.Landing.Repositories;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Landing.Helpers;
 using Moneteer.Landing.Extensions;
@@ -24,7 +21,6 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly IBudgetRepository _budgetRepository;
         private readonly IConnectionProvider _connectionProvider;
         private readonly IConfigurationHelper _configurationHelper;
 
@@ -33,7 +29,6 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IBudgetRepository budgetRepository,
             IConnectionProvider connectionProvider,
             IConfigurationHelper configurationHelper)
         {
@@ -41,7 +36,6 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _budgetRepository = budgetRepository;
             _connectionProvider = connectionProvider;
             _configurationHelper = configurationHelper;
         }
@@ -92,7 +86,6 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await CreateBudgetForNewUser(user);
                     await SendEmailConfirmation(user);
 
                     return RedirectToPage("./RegisterCheckEmail");
@@ -102,41 +95,12 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
         }
-
-        private async Task CreateBudgetForNewUser(User user)
-        {
-            try
-            {
-                var budget = new Budget
-                {
-                    CurrencyCode = "USD",
-                    CurrencySymbolLocation = SymbolLocation.Before,
-                    DateFormat = "dd/MM/yyyy",
-                    DecimalPlaces = 2,
-                    DecimalSeparator = ".",
-                    ThousandsSeparator = ",",
-                    Name = "My Budget",
-                    UserId = user.Id
-                };
-
-                using (var conn = _connectionProvider.GetOpenConnection())
-                {
-                    var budgetEntity = await _budgetRepository.Create(budget, conn);
-                    await _budgetRepository.CreateDefaultEnvelopes(budgetEntity.Id, conn);
-                }
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError(ex, $"Unable to create budget for user {user.Id}");
-            }
-        }
-
+        
         private async Task SendEmailConfirmation(User user)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

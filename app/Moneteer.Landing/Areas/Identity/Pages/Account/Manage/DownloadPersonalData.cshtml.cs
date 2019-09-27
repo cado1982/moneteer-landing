@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Landing.Managers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 {
@@ -39,7 +41,9 @@ namespace Moneteer.Landing.V2.Areas.Identity.Pages.Account.Manage
 
             _logger.LogInformation("User with ID '{UserId}' asked for their personal data.", _userManager.GetUserId(User));
 
-            var personalData = await _personalDataManager.GetPersonalDataAsync(user);
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+
+            var personalData = await _personalDataManager.GetPersonalDataAsync(user, accessToken);
 
             Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
             return new FileContentResult(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(personalData)), "text/json");

@@ -4,27 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Moneteer.Identity.Domain.Entities;
-using Moneteer.Landing.Helpers;
 using Moneteer.Landing.Models;
+using Moneteer.Backend.Client;
 
 namespace Moneteer.Landing.Managers
 {
     public class PersonalDataManager : IPersonalDataManager
     {
-        private readonly ApiClientHelper _apiClientHelper;
+        private readonly MoneteerApiClient _apiClient;
 
-        public PersonalDataManager(ApiClientHelper apiClientHelper)
+        public PersonalDataManager(MoneteerApiClient apiClient)
         {
-            _apiClientHelper = apiClientHelper;
+            _apiClient = apiClient;
         }
 
-        public async Task<PersonalData> GetPersonalDataAsync(User user)
+        public async Task<PersonalData> GetPersonalDataAsync(User user, string accessToken)
         {
             var personalData = new PersonalData();
 
             personalData.UserData = GetUserData(user);
-
-            var appData = await GetAppData();
+            personalData.AppData = await GetAppData(accessToken);
 
             return personalData;
         }
@@ -42,15 +41,20 @@ namespace Moneteer.Landing.Managers
             return userData;
         }
 
-        private async Task<int> GetAppData()
+        private async Task<AppData> GetAppData(string accessToken)
         {
-            var token = await _apiClientHelper.GetAccessToken();
-            var client = _apiClientHelper.GetClient(token);
+            var result = new AppData();
 
-            var response = await client.GetAsync("healthcheck");
+            var budgets = await _apiClient.GetBudgetsAsync(accessToken);
+            var budget = budgets.FirstOrDefault();
+            if (budget == null) return null;
 
-            return 0;
-
+            result.Transactions = await _apiClient.GetTransactionsAsync(budget.Id, accessToken);
+            result.Accounts = await _apiClient.GetAccountsAsync(budget.Id, accessToken);
+            result.EnvelopeCategories = await _apiClient.GetEnvelopeCategoriesAsync(budget.Id, accessToken);
+            result.Envelopes = await _apiClient.GetEnvelopesAsync(budget.Id, accessToken);
+            
+            return result;
         }
     }
 }

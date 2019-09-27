@@ -7,6 +7,6 @@ namespace Moneteer.Landing.Managers
 {
     public interface IPersonalDataManager
     {
-        Task<PersonalData> GetPersonalDataAsync(User userId);
+        Task<PersonalData> GetPersonalDataAsync(User userId, string accessToken);
     }
 }

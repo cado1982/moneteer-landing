@@ -28,8 +28,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Moneteer.Backend.Client">
+      <HintPath>Moneteer.Backend.Client.dll</HintPath>
+    </Reference>
     <Reference Include="Moneteer.Identity.Domain">
       <HintPath>Moneteer.Identity.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="Moneteer.Models">
+      <HintPath>Moneteer.Models.dll</HintPath>
     </Reference>
   </ItemGroup>
 

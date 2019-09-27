@@ -22,8 +22,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Cryptography.X509Certificates;
 using Serilog;
-using Stripe;
 using Moneteer.Landing.Managers;
+using Moneteer.Backend.Client;
 
 namespace Moneteer.Landing.V2
 {
@@ -53,12 +53,11 @@ namespace Moneteer.Landing.V2
             var moneteerConnectionString = Configuration.GetConnectionString("Moneteer");
             services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = moneteerConnectionString });
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
-            services.AddTransient<IBudgetRepository, BudgetRepository>();
             services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
             services.AddTransient<ISubscriptionManager, SubscriptionManager>();
             services.AddTransient<IStripeWebhookManager, StripeWebhookManager>();
             services.AddTransient<IPersonalDataManager, PersonalDataManager>();
-            services.AddSingleton<ApiClientHelper>();
+            services.AddMoneteerApiClient(Configuration["ApiUri"]);
 
             services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(moneteerConnectionString));
             services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(moneteerConnectionString));
@@ -119,7 +118,9 @@ namespace Moneteer.Landing.V2
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.Authority = Configuration["OpenIdConnectAuthority"];
-
+                options.SignInScheme = "Cookies";
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
                 options.ClientId = "moneteer-mvc";
                 options.ClientSecret = Configuration["ClientSecret"];
 
@@ -127,7 +128,7 @@ namespace Moneteer.Landing.V2
                 options.ResponseType = "code id_token";
                 options.RequireHttpsMetadata = !Environment.IsDevelopment();
                 options.Scope.Clear();
-                options.Scope.Add("openid profile");
+                options.Scope.Add("openid profile moneteer-api");
 
                 options.CallbackPath = new PathString("/signin-callback-oidc");
                 options.SignedOutCallbackPath = new PathString("/signout-callback-oidc");
