@@ -12,7 +12,7 @@ namespace Moneteer.Landing.V2.Controllers
 {
     [AllowAnonymous]
     [Route("api/stripe")]
-    public class StripeApiController : Controller
+    public class StripeApiController : ControllerBase
     {
         private readonly IConfigurationHelper _configurationHepler;
         private readonly ILogger<StripeApiController> _logger;

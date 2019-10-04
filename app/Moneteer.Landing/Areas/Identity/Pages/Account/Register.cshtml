@@ -6,10 +6,9 @@
 @inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper
 
 <div class="container my-5">
-    <div class="row mb-3">
-        <div class="col-md-8 col-lg-6 offset-md-2 offset-lg-3 mb-3 alert alert-primary" role="alert">
-            Moneteer is in development. You can still create an account and we'll let you know when the app is ready!
-        </div>
+    <div class="text-center mb-5">
+        <h4>Try it for free today.</h4>
+        <h5>No credit card required. 30 day trial.</h5>
     </div>
     
     <form asp-route-returnUrl="@Model.ReturnUrl" method="post" novalidate>
@@ -37,7 +36,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary">Start 30 day trial</button>
                 </div>
             </div>
         </div>
