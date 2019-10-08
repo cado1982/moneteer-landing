@@ -14,11 +14,19 @@ using Microsoft.IdentityModel.Tokens;
 using IdentityModel;
 using System.Security.Cryptography;
 using System.IdentityModel.Tokens.Jwt;
+using Moneteer.Landing.Helpers;
 
 namespace Moneteer.Landing.V2.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IConfigurationHelper _configurationHelper;
+
+        public AccountController(IConfigurationHelper configurationHelper)
+        {
+            _configurationHelper = configurationHelper;
+        }
+
         [AllowAnonymous]
         public Task Login()
         {
@@ -35,98 +43,101 @@ namespace Moneteer.Landing.V2.Controllers
             await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme, new AuthenticationProperties { RedirectUri = "/" }).ConfigureAwait(false);
         }
 
-        // public async Task<IActionResult> FrontChannelLogout(string sid)
-        // {
-        //     if (User.Identity.IsAuthenticated)
-        //     {
-        //         var currentSid = User.FindFirst("sid")?.Value ?? "";
-        //         if (string.Equals(currentSid, sid, StringComparison.Ordinal))
-        //         {
-        //             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        //         }
-        //     }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> BackChannelLogout(string logout_token)
+        {
+            Response.Headers.Add("Cache-Control", "no-cache, no-store");
+            Response.Headers.Add("Pragma", "no-cache");
 
-        //     return NoContent();
-        // }
+            try
+            {
+                var user = await ValidateLogoutToken(logout_token);
 
-        // [HttpPost]
-        // [AllowAnonymous]
-        // public async Task<IActionResult> BackChannelLogout(string logout_token)
-        // {
-        //     Response.Headers.Add("Cache-Control", "no-cache, no-store");
-        //     Response.Headers.Add("Pragma", "no-cache");
+                // these are the sub & sid to signout
+                var sub = user.FindFirst("sub")?.Value;
+                var sid = user.FindFirst("sid")?.Value;
 
-        //     try
-        //     {
-        //         var user = await ValidateLogoutToken(logout_token);
+                return Ok();
+            }
+            catch (Exception ex)
+            { 
+                Console.WriteLine(ex);
+            }
 
-        //         // these are the sub & sid to signout
-        //         var sub = user.FindFirst("sub")?.Value;
-        //         var sid = user.FindFirst("sid")?.Value;
+            return BadRequest();
+        }
 
-        //         return Ok();
-        //     }
-        //     catch { }
+        private async Task<ClaimsPrincipal> ValidateLogoutToken(string logoutToken)
+        {
+            var claims = await ValidateJwt(logoutToken);
 
-        //     return BadRequest();
-        // }
+            if (claims.FindFirst("sub") == null && claims.FindFirst("sid") == null) throw new Exception("Invalid logout token");
 
-        // private async Task<ClaimsPrincipal> ValidateLogoutToken(string logoutToken)
-        // {
-        //     var claims = await ValidateJwt(logoutToken);
+            var nonce = claims.FindFirstValue("nonce");
+            if (!String.IsNullOrWhiteSpace(nonce)) throw new Exception("Invalid logout token");
 
-        //     if (claims.FindFirst("sub") == null && claims.FindFirst("sid") == null) throw new Exception("Invalid logout token");
+            var eventsJson = claims.FindFirst("events")?.Value;
+            if (String.IsNullOrWhiteSpace(eventsJson)) throw new Exception("Invalid logout token");
 
-        //     var nonce = claims.FindFirstValue("nonce");
-        //     if (!String.IsNullOrWhiteSpace(nonce)) throw new Exception("Invalid logout token");
+            var events = JObject.Parse(eventsJson);
+            var logoutEvent = events.TryGetValue("http://schemas.openid.net/event/backchannel-logout");
+            if (logoutEvent == null) throw new Exception("Invalid logout token");
 
-        //     var eventsJson = claims.FindFirst("events")?.Value;
-        //     if (String.IsNullOrWhiteSpace(eventsJson)) throw new Exception("Invalid logout token");
+            return claims;
+        }
 
-        //     var events = JObject.Parse(eventsJson);
-        //     var logoutEvent = events.TryGetValue("http://schemas.openid.net/event/backchannel-logout");
-        //     if (logoutEvent == null) throw new Exception("Invalid logout token");
+        public async Task<IActionResult> FrontChannelLogout(string sid)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var currentSid = User.FindFirst("sid")?.Value ?? "";
+                if (string.Equals(currentSid, sid, StringComparison.Ordinal))
+                {
+                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                }
+            }
 
-        //     return claims;
-        // }
+            return NoContent();
+        }
 
-        // private static async Task<ClaimsPrincipal> ValidateJwt(string jwt)
-        // {
-        //     // read discovery document to find issuer and key material
-        //     var client = new HttpClient();
-        //     var disco = await client.GetDiscoveryDocumentAsync(Constants.Authority);
+        private async Task<ClaimsPrincipal> ValidateJwt(string jwt)
+        {
+            // read discovery document to find issuer and key material
+            var client = new HttpClient();
+            var disco = await client.GetDiscoveryDocumentAsync(_configurationHelper.IdentityUri);
 
-        //     var keys = new List<SecurityKey>();
-        //     foreach (var webKey in disco.KeySet.Keys)
-        //     {
-        //         var e = Base64Url.Decode(webKey.E);
-        //         var n = Base64Url.Decode(webKey.N);
+            var keys = new List<SecurityKey>();
+            foreach (var webKey in disco.KeySet.Keys)
+            {
+                var e = Base64Url.Decode(webKey.E);
+                var n = Base64Url.Decode(webKey.N);
 
-        //         var key = new RsaSecurityKey(new RSAParameters { Exponent = e, Modulus = n })
-        //         {
-        //             KeyId = webKey.Kid
-        //         };
+                var key = new RsaSecurityKey(new RSAParameters { Exponent = e, Modulus = n })
+                {
+                    KeyId = webKey.Kid
+                };
 
-        //         keys.Add(key);
-        //     }
+                keys.Add(key);
+            }
 
-        //     var parameters = new TokenValidationParameters
-        //     {
-        //         ValidIssuer = disco.Issuer,
-        //         ValidAudience = "mvc.manual",
-        //         IssuerSigningKeys = keys,
+            var parameters = new TokenValidationParameters
+            {
+                ValidIssuer = disco.Issuer,
+                ValidAudience = "moneteer-mvc",
+                IssuerSigningKeys = keys,
 
-        //         NameClaimType = JwtClaimTypes.Name,
-        //         RoleClaimType = JwtClaimTypes.Role,
+                NameClaimType = JwtClaimTypes.Name,
+                RoleClaimType = JwtClaimTypes.Role,
 
-        //         RequireSignedTokens = true
-        //     };
+                RequireSignedTokens = true
+            };
 
-        //     var handler = new JwtSecurityTokenHandler();
-        //     handler.InboundClaimTypeMap.Clear();
+            var handler = new JwtSecurityTokenHandler();
+            handler.InboundClaimTypeMap.Clear();
 
-        //     var user = handler.ValidateToken(jwt, parameters, out var _);
-        //     return user;
-        // }
+            var user = handler.ValidateToken(jwt, parameters, out var _);
+            return user;
+        }
     }
 }
