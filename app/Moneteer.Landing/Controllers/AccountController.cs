@@ -15,16 +15,19 @@ using IdentityModel;
 using System.Security.Cryptography;
 using System.IdentityModel.Tokens.Jwt;
 using Moneteer.Landing.Helpers;
+using Moneteer.Landing.Managers;
 
 namespace Moneteer.Landing.V2.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IConfigurationHelper _configurationHelper;
+        private readonly LogoutSessionManager _logoutSessionManager;
 
-        public AccountController(IConfigurationHelper configurationHelper)
+        public AccountController(IConfigurationHelper configurationHelper, LogoutSessionManager logoutSessionManager)
         {
             _configurationHelper = configurationHelper;
+            _logoutSessionManager = logoutSessionManager;
         }
 
         [AllowAnonymous]
@@ -45,6 +48,7 @@ namespace Moneteer.Landing.V2.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> BackChannelLogout(string logout_token)
         {
             Response.Headers.Add("Cache-Control", "no-cache, no-store");
@@ -58,12 +62,11 @@ namespace Moneteer.Landing.V2.Controllers
                 var sub = user.FindFirst("sub")?.Value;
                 var sid = user.FindFirst("sid")?.Value;
 
+                _logoutSessionManager.Add(sub, sid);
+
                 return Ok();
             }
-            catch (Exception ex)
-            { 
-                Console.WriteLine(ex);
-            }
+            catch { }
 
             return BadRequest();
         }

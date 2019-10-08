@@ -24,6 +24,7 @@ using System.Security.Cryptography.X509Certificates;
 using Serilog;
 using Moneteer.Landing.Managers;
 using Moneteer.Backend.Client;
+using System.Threading.Tasks;
 
 namespace Moneteer.Landing.V2
 {
@@ -57,6 +58,8 @@ namespace Moneteer.Landing.V2
             services.AddTransient<ISubscriptionManager, SubscriptionManager>();
             services.AddTransient<IStripeWebhookManager, StripeWebhookManager>();
             services.AddTransient<IPersonalDataManager, PersonalDataManager>();
+            services.AddTransient<CookieEventHandler>();
+            services.AddSingleton<LogoutSessionManager>();
             services.AddMoneteerApiClient(Configuration["ApiUri"]);
 
             services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(moneteerConnectionString));
@@ -114,7 +117,12 @@ namespace Moneteer.Landing.V2
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-            .AddCookie()
+            .AddCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.Cookie.Name = "moneteermvc";
+                options.EventsType = typeof(CookieEventHandler);
+            })
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.Authority = Configuration["OpenIdConnectAuthority"];
@@ -131,6 +139,50 @@ namespace Moneteer.Landing.V2
                 options.Scope.Add("openid profile moneteer-api");
 
                 options.CallbackPath = new PathString("/signin-callback-oidc");
+                options.SignedOutCallbackPath = new PathString("/signout-callback-oidc");
+                options.SignedOutRedirectUri = new PathString("/");
+                options.ClaimsIssuer = OpenIdConnectDefaults.AuthenticationScheme;
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = JwtClaimTypes.Name,
+                    RoleClaimType = JwtClaimTypes.Role
+                };
+            })
+            .AddOpenIdConnect("persistent", options =>
+            {
+                options.CallbackPath = "/signin-callback-persistent";
+                options.Events = new OpenIdConnectEvents
+                {
+                    OnRedirectToIdentityProvider = context =>
+                    {
+                        context.ProtocolMessage.Prompt = OidcConstants.PromptModes.None;
+                        return Task.FromResult<object>(null);
+                    },
+
+                    OnMessageReceived = context => {
+                        if (string.Equals(context.ProtocolMessage.Error, "login_required", StringComparison.Ordinal))
+                        {
+                            context.HandleResponse();
+                            context.Response.Redirect("/");
+                        }
+                        return Task.FromResult<object>(null);
+                    }
+                };
+
+                options.Authority = Configuration["OpenIdConnectAuthority"];
+                options.SignInScheme = "Cookies";
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+                options.ClientId = "moneteer-mvc";
+                options.ClientSecret = Configuration["ClientSecret"];
+
+                options.RemoteAuthenticationTimeout = TimeSpan.FromHours(2);
+                options.ResponseType = "code id_token";
+                options.RequireHttpsMetadata = !Environment.IsDevelopment();
+                options.Scope.Clear();
+                options.Scope.Add("openid profile moneteer-api");
+
                 options.SignedOutCallbackPath = new PathString("/signout-callback-oidc");
                 options.SignedOutRedirectUri = new PathString("/");
                 options.ClaimsIssuer = OpenIdConnectDefaults.AuthenticationScheme;
