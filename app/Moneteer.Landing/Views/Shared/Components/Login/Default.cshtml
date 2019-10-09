@@ -1,5 +1,10 @@
+@inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper;
+
 @if (User.Identity.IsAuthenticated)
 {
+    <li class="nav-item mr-lg-4 mt-2 mt-lg-0">
+        <a class="nav-link btn btn-warning" href="@ConfigurationHelper.AppUri">Launch App</a>
+    </li>
     <li class="nav-item mr-lg-4 mt-2 mt-lg-0">
         <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
     </li>
@@ -10,7 +15,7 @@
 else
 {
     <li class="nav-item mr-lg-4 mt-2 mt-lg-0">
-        <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register">Try Free for 30 days</a>
     </li>
 
     <li class="nav-item mt-2 mt-lg-0">
