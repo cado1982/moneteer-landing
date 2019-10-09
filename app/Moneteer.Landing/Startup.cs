@@ -68,6 +68,10 @@ namespace Moneteer.Landing.V2
             services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(moneteerConnectionString));
             services.AddDefaultIdentity<User>(options =>
             {
+                options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
+                options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
+                options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
+                
                 options.SignIn.RequireConfirmedEmail = true;
             })
                 .AddDefaultTokenProviders()
