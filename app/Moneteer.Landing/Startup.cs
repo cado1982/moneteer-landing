@@ -25,6 +25,7 @@ using Serilog;
 using Moneteer.Landing.Managers;
 using Moneteer.Backend.Client;
 using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Moneteer.Landing.V2
 {
@@ -60,6 +61,7 @@ namespace Moneteer.Landing.V2
             services.AddTransient<IPersonalDataManager, PersonalDataManager>();
             services.AddTransient<CookieEventHandler>();
             services.AddSingleton<LogoutSessionManager>();
+            services.AddSingleton<IConfigurationHelper, ConfigurationHelper>();
             services.AddMoneteerApiClient(Configuration["ApiUri"]);
 
             services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(moneteerConnectionString));
@@ -111,6 +113,7 @@ namespace Moneteer.Landing.V2
                 options.SignIn.RequireConfirmedPhoneNumber = false;
                 
             });
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -189,7 +192,8 @@ namespace Moneteer.Landing.V2
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    NameClaimType = JwtClaimTypes.Name
+                    NameClaimType = JwtClaimTypes.Name,
+                    RoleClaimType = JwtClaimTypes.Role
                 };
             });
 
@@ -206,19 +210,17 @@ namespace Moneteer.Landing.V2
             services.AddMvc(options => 
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
-            });
-
-            services.AddSingleton<IConfigurationHelper, ConfigurationHelper>();
+            });            
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseSerilogRequestLogging();
