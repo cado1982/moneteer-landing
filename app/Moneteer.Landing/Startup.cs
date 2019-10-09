@@ -171,7 +171,7 @@ namespace Moneteer.Landing.V2
                         if (string.Equals(context.ProtocolMessage.Error, "login_required", StringComparison.Ordinal))
                         {
                             context.HandleResponse();
-                            context.Response.Redirect("/");
+                            context.Response.Redirect(context.Properties.RedirectUri ?? "/");
                         }
                         return Task.FromResult<object>(null);
                     }
