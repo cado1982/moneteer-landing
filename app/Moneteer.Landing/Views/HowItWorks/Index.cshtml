@@ -1,0 +1,106 @@
+﻿@inject Moneteer.Landing.Helpers.IConfigurationHelper ConfigurationHelper;
+
+<div class="container my-6">
+    <div class="row text-center mb-6">
+        <div class="col-12 text-center">
+            <h1 class="display-3">How It Works</h1>
+        </div>
+        <div class="col-12 text-center text-muted">
+            Find out how our system can help get control of your finances
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12 col-lg-8 offset-lg-2">
+            <h2>Introduction</h2>
+        </div>
+        <div class="col-lg-8 offset-lg-2 col-12 my-4">
+            Moneteer is a personal budgeting app built around the popular envelope budgeting system. Using this system, you assign your money to virtual envelopes which you then spend from.
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12 col-lg-8 offset-lg-2">
+            <h2>Money Flow</h2>
+        </div>
+        <div class="col-lg-8 offset-lg-2 col-12 my-4">
+            <p>
+                Your money flows through your envelopes in 3 distinct stages.
+                <ol>
+                    <li><strong>Get Paid</strong> - Your paycheck goes into your <em>available income</em> pile when you get paid.</li>
+                    <li><strong>Assign Income</strong> - Assign <em>available income</em> to your virtual envelopes.</li>
+                    <li><strong>Spend</strong> - Make purchases using the money in your virtual envelopes.</li>
+                </ol>
+            </p>
+
+            <p>
+                <h4>Get Paid</h4>
+                Your paycheck arrives (yay) so you open the Moneteer app and create a transaction. The app places your money into the Available Income pile ready for you to put it to use.
+            </p>
+
+
+            <h4>Assign Income</h4>
+            <p>You then decide which virtual envelopes to assign your <em>available income</em> to.</p>
+            <p>You don’t have to do this step right away. Many of our users prefer to perform this step at the start of each month to cover the month’s expenses.</p>
+            <h4>Spend</h4>
+            <p>Enter a transaction into Moneteer when you make a purchase. Moneteer will deduct the money from your virtual envelope to cover the transaction.</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-8 offset-lg-2 col-12">
+            <h2>It Just Works</h2>
+        </div>
+        <div class="col-lg-8 offset-lg-2 col-12 my-4">
+            <p>The Moneteer system gives you the <em>confidence</em> to make purchases without feeling a sense of dread. You just need to take a glance at your envelopes to see where you’re at right now.</p>
+            <p>If you don’t have money left in an envelope to cover a purchase, just move some money from another envelope to cover it. You have the <em>freedom</em> to move your money around as you please, and the <em>confidence</em> that you are not spending money you don’t have.</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-8 offset-lg-2 col-12">
+            <h2>Real-World Example</h2>
+        </div>
+        <div class="col-lg-8 offset-lg-2 col-12 my-4">
+            <p>Imagine you're paid weekly. Each time a paycheck arrives, you enter a transaction into Moneteer for the money you received. </p>
+            <p>Then at the beginning of each month, your <em>available income</em> pile has the total of the previous month’s paychecks ready for you to put it to work, so you open the app and decide where you need that money to be best used.</p>
+            <p>You decide that you need some money for groceries so you assign $200 to the groceries envelope. You go through and assign the rest of the money to your other envelopes as needed.</p>
+            <p>A week later, you go to the store and buy $80 worth of groceries. You enter a transaction in Moneteer for $80 and choose the groceries envelope. Moneteer deducts $80 from your groceries envelope leaving it with $120.</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-8 offset-lg-2 col-12">
+            <h2 class="text-primary">Conclusion</h2>
+        </div>
+        <div class="col-lg-8 offset-lg-2 col-12 my-4">
+            <p>The envelope system has a <strong>proven track record</strong> of helping people get out of debt and <em>take control</em> of their financial lives. The accountability that comes from entering your transactions makes you more aware of your spending. </p>
+            <p>Checking your envelope balances regularly gives you peace of mind, and the freedom to spend without uncertainty.</p>
+            <p>Ready to get started on the path to financial freedom?</p>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-warning btn-lg">Start your free 30 day trial</a>
+            }
+            else
+            {
+                <a class="btn btn-warning btn-lg" href="@ConfigurationHelper.AppUri">Launch App</a>
+            }
+        </div>
+    </div>
+
+    @*<div class="row mt-6">
+            <div class="col-12 text-center">
+                <h2>Security</h2>
+            </div>
+            <div class="col-lg-5 offset-lg-1 d-flex col-12 feature-image p-5">
+                <img src="images/security.svg" />
+            </div>
+            <div class="col-lg-5 col-12 my-4">
+                <p>It is essential to have some money set aside for emergencies.</p>
+                <p>Your number one priority should be to build up your emergency fund. This fund covers unexpected expenses, such as car repairs, dentist bills, or funeral costs. </p>
+                <p>A long term goal should be 3-6 months expenses in your emergency fund. This covers for big, unexpected life events such as a job loss, and ensures that you can still pay your bills and put food on the table.</p>
+            </div>
+
+        </div>*@
+
+</div>

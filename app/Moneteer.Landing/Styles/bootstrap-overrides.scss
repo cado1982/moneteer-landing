@@ -24,6 +24,8 @@ $spacers: map-merge(
   $spacers
 );
 
+$headings-color: $brand-dark-color;
+
 // Variables must be above this and css below.
 @import "../node_modules/bootstrap/scss/bootstrap";
 

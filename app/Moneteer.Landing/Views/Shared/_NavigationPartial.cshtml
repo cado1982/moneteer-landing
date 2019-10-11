@@ -23,15 +23,18 @@
 
             <ul class="navbar-nav mr-lg-auto ml-lg-4">
                 <!-- <li class="nav-item">
-                    <a asp-controller="Blog" asp-action="Index" class="nav-link">Blog</a>
-                </li> -->
+        <a asp-controller="Blog" asp-action="Index" class="nav-link">Blog</a>
+    </li> -->
                 <li class="nav-item">
                     <a asp-controller="Philosophy" asp-action="Index" class="nav-link">Philosophy</a>
+                </li>
+                <li class="nav-item ml-lg-3">
+                    <a asp-controller="HowItWorks" asp-action="Index" class="nav-link">How It Works</a>
                 </li>
             </ul>
 
 
-            <ul class="navbar-nav">
+            <ul class="navbar-nav align-items-center">
                 @await Component.InvokeAsync("Login")
             </ul>
         </div>
