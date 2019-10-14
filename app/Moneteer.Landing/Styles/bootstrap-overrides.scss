@@ -26,6 +26,8 @@ $spacers: map-merge(
 
 $headings-color: $brand-dark-color;
 
+$enable-responsive-font-sizes: true;
+
 // Variables must be above this and css below.
 @import "../node_modules/bootstrap/scss/bootstrap";
 
