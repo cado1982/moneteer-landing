@@ -155,50 +155,6 @@ namespace Moneteer.Landing.V2
                     NameClaimType = JwtClaimTypes.Name,
                     RoleClaimType = JwtClaimTypes.Role
                 };
-            })
-            .AddOpenIdConnect("persistent", options =>
-            {
-                options.CallbackPath = "/signin-callback-persistent";
-                options.Events = new OpenIdConnectEvents
-                {
-                    OnRedirectToIdentityProvider = context =>
-                    {
-                        context.ProtocolMessage.Prompt = OidcConstants.PromptModes.None;
-                        return Task.FromResult<object>(null);
-                    },
-
-                    OnMessageReceived = context => {
-                        if (string.Equals(context.ProtocolMessage.Error, "login_required", StringComparison.Ordinal))
-                        {
-                            context.HandleResponse();
-                            context.Response.Redirect(context.Properties.RedirectUri ?? "/");
-                        }
-                        return Task.FromResult<object>(null);
-                    }
-                };
-
-                options.Authority = Configuration["OpenIdConnectAuthority"];
-                options.SignInScheme = "Cookies";
-                options.SaveTokens = true;
-                options.GetClaimsFromUserInfoEndpoint = true;
-                options.ClientId = "moneteer-mvc";
-                options.ClientSecret = Configuration["ClientSecret"];
-
-                options.RemoteAuthenticationTimeout = TimeSpan.FromHours(2);
-                options.ResponseType = "code id_token";
-                options.RequireHttpsMetadata = !Environment.IsDevelopment();
-                options.Scope.Clear();
-                options.Scope.Add("openid profile moneteer-api");
-
-                options.SignedOutCallbackPath = new PathString("/signout-callback-oidc");
-                options.SignedOutRedirectUri = new PathString("/");
-                options.ClaimsIssuer = OpenIdConnectDefaults.AuthenticationScheme;
-
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = JwtClaimTypes.Name,
-                    RoleClaimType = JwtClaimTypes.Role
-                };
             });
 
             services.AddTransient<IEmailSender, EmailSender>();

@@ -21,7 +21,28 @@
             </ul>
 
             <ul class="navbar-nav">
-                @await Component.InvokeAsync("Login")
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item mr-lg-4 my-2 my-lg-0">
+                        <a class="nav-link btn btn-warning" href="@ConfigurationHelper.AppUri">Launch App</a>
+                    </li>
+                    <li class="nav-item mr-lg-4">
+                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " asp-controller="Account" asp-action="Logout">Log out</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item mr-lg-4 my-2 my-lg-0">
+                        <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register">Try Free for 30 days</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                    </li>
+                }
             </ul>
         </div>
 
